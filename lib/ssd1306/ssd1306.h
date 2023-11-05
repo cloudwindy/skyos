@@ -20,8 +20,8 @@ _BEGIN_STD_C
 #define SSD1306_X_OFFSET_LOWER (SSD1306_X_OFFSET & 0x0F)
 #define SSD1306_X_OFFSET_UPPER ((SSD1306_X_OFFSET >> 4) & 0x07)
 #else
-#define SSD1306_X_OFFSET_LOWER
-#define SSD1306_X_OFFSET_UPPER
+#define SSD1306_X_OFFSET_LOWER 0
+#define SSD1306_X_OFFSET_UPPER 0
 #endif
 
 #include "ssd1306_fonts.h"
@@ -43,7 +43,7 @@ _BEGIN_STD_C
 #define SSD1306_BANK_CS GPIOB
 #endif
 #ifndef SSD1306_CS
-#define SSD1306_CS GPIO12
+#define SSD1306_CS GPIO10
 #endif
 
 #ifndef SSD1306_BANK_DC
@@ -105,7 +105,7 @@ typedef struct
 } SSD1306_VERTEX;
 
 // Procedure definitions
-void ssd1306_init(void);
+void setup_ssd1306(void);
 void ssd1306_fill(SSD1306_Color color);
 void ssd1306_update(void);
 SSD1306_Color ssd1306_get_pixel(uint8_t x, uint8_t y);

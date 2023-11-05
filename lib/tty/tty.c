@@ -1,10 +1,8 @@
 #include "tty.h"
 
-bool tty_init_done = false;
 uint8_t cur_row = 0;
 uint8_t cur_col = 0;
 
-static void tty_init(void);
 static void tty_putchar(char str);
 static void tty_return(void);
 static void tty_new_line(void);
@@ -15,8 +13,6 @@ static void tty_flush(void);
  */
 void tty_print(char *str, int len)
 {
-  if (!tty_init_done)
-    tty_init();
   for (int i = 0; i < len; i++)
     tty_putchar(str[i]);
   tty_flush();
@@ -33,12 +29,6 @@ void tty_clear(void)
   cur_col = 0;
 }
 
-static void tty_init(void)
-{
-  ssd1306_init();
-  tty_init_done = true;
-}
-
 static void tty_putchar(char str)
 {
   switch (str)
@@ -52,7 +42,7 @@ static void tty_putchar(char str)
     break;
 
   default:
-    if (cur_col >= TTY_COLUMNS - 1)
+    if (cur_col >= TTY_COLUMNS)
       tty_new_line();
     cur_col++;
     ssd1306_write_char(str, TTY_FONT, TTY_COLOR);
@@ -68,7 +58,7 @@ static void tty_putchar(char str)
 static void tty_return(void)
 {
   cur_col = 0;
-  ssd1306_set_cursor(0, cur_row * TTY_FONT_HEIGHT + 1);
+  ssd1306_set_cursor(0, cur_row * TTY_FONT_HEIGHT);
 }
 
 /**

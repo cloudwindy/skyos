@@ -13,9 +13,8 @@ void ssd1306_reset(void)
 
   // Reset the OLED
   gpio_clear(SSD1306_BANK_RES, SSD1306_RES);
-  delay(10);
+  delay(3);
   gpio_set(SSD1306_BANK_RES, SSD1306_RES);
-  delay(10);
 }
 
 // Send a byte to the command register
@@ -26,6 +25,7 @@ void ssd1306_write_command(uint8_t byte)
   // Command
   gpio_clear(SSD1306_BANK_DC, SSD1306_DC);
   spi_send(SSD1306_SPI, (uint16_t)byte);
+  udelay(1);
   // Unselect OLED
   gpio_set(SSD1306_BANK_CS, SSD1306_CS);
 }
@@ -39,6 +39,7 @@ void ssd1306_write_data(uint8_t *buffer, size_t size)
   gpio_set(SSD1306_BANK_DC, SSD1306_DC);
   while (--size)
     spi_send(SSD1306_SPI, (uint16_t)*buffer++);
+  udelay(1);
   // Unselect OLED
   gpio_set(SSD1306_BANK_CS, SSD1306_CS);
 }
@@ -50,7 +51,7 @@ uint8_t ssd1306_screen_buffer[SSD1306_BUFFER_SIZE] = {0};
 static SSD1306_t ssd1306;
 
 /* Initialize the oled screen */
-void ssd1306_init(void)
+void setup_ssd1306(void)
 {
   // Reset OLED
   ssd1306_reset();
@@ -221,7 +222,7 @@ void ssd1306_move_up(uint8_t height)
       ssd1306_draw_pixel(x, y, Black);
     for (uint8_t y = 0; y < SSD1306_HEIGHT - height; y++)
       ssd1306_draw_pixel(x, y, ssd1306_get_pixel(x, y + height));
-    for (uint8_t y = SSD1306_HEIGHT; y > SSD1306_HEIGHT - height - 1; y--)
+    for (uint8_t y = SSD1306_HEIGHT; y > SSD1306_HEIGHT - height; y--)
       ssd1306_draw_pixel(x, y, Black);
   }
   ssd1306_update();
@@ -242,20 +243,20 @@ char ssd1306_write_char(char ch, FontDef Font, SSD1306_Color color)
     return 0;
 
   // Check remaining space on current line
-  if (SSD1306_WIDTH < (ssd1306.CurrentX + Font.FontWidth) ||
-      SSD1306_HEIGHT < (ssd1306.CurrentY + Font.FontHeight))
+  if (SSD1306_WIDTH < (ssd1306.CurrentX + Font.width) ||
+      SSD1306_HEIGHT < (ssd1306.CurrentY + Font.height))
   {
     // Not enough space on current line
     return 0;
   }
 
   // Use the font to write
-  for (i = 0; i < Font.FontHeight; i++)
+  for (i = 0; i < Font.height; i++)
   {
-    b = Font.data[(ch - 32) * Font.FontHeight + i];
-    for (j = 0; j < Font.FontWidth; j++)
+    b = (uint32_t)Font.data[(ch - 32) * Font.height + i] << 4;
+    for (j = 0; j < Font.width; j++)
     {
-      if ((b << j) & 0x8000)
+      if ((b << j) & 0x0800)
       {
         ssd1306_draw_pixel(ssd1306.CurrentX + j, (ssd1306.CurrentY + i), (SSD1306_Color)color);
       }
@@ -267,7 +268,7 @@ char ssd1306_write_char(char ch, FontDef Font, SSD1306_Color color)
   }
 
   // The current space is now taken
-  ssd1306.CurrentX += Font.FontWidth;
+  ssd1306.CurrentX += Font.width;
 
   // Return written char for validation
   return ch;

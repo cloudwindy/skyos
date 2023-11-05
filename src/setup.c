@@ -31,6 +31,7 @@ void setup(void)
   setup_rtc();
   setup_spi();
   setup_i2c();
+  setup_ssd1306();
 }
 
 /**
@@ -74,9 +75,8 @@ static void setup_gpio(void)
                 GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_RES);
   gpio_set_mode(SSD1306_BANK_DC, GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_DC);
-  gpio_set_mode(SSD1306_BANK_CS, GPIO_MODE_OUTPUT_2_MHZ,
+  gpio_set_mode(SSD1306_BANK_CS, GPIO_MODE_OUTPUT_50_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_CS);
-  gpio_clear(SSD1306_BANK_CS, SSD1306_CS);
 }
 
 /**
@@ -110,9 +110,9 @@ static void setup_rtc(void)
  * SPI 端口配置
  *
  * 数据位数 8 位
- * 波特率  4.5M 16分频
- * 时钟极性 高电平有效
- * 时钟相位 第一沿有效
+ * 波特率 8 Mhz
+ * 时钟极性 低
+ * 时钟相位 1
  * 端序 大端序
  */
 static void setup_spi(void)
@@ -121,7 +121,7 @@ static void setup_spi(void)
   rcc_periph_reset_pulse(RST_SPI1);
   gpio_set_mode(GPIO_BANK_SPI1_SCK, GPIO_MODE_OUTPUT_50_MHZ,
                 GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_SPI1_SCK | GPIO_SPI1_MOSI);
-  spi_init_master(SPI1, SPI_CR1_BAUDRATE_FPCLK_DIV_8, SPI_CR1_CPOL_CLK_TO_1_WHEN_IDLE,
+  spi_init_master(SPI1, SPI_CR1_BAUDRATE_FPCLK_DIV_8, SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE,
                   SPI_CR1_CPHA_CLK_TRANSITION_1, SPI_CR1_DFF_8BIT, SPI_CR1_MSBFIRST);
   spi_set_bidirectional_transmit_only_mode(SPI1);
   spi_enable_software_slave_management(SPI1);
