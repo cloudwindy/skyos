@@ -234,7 +234,7 @@ void ssd1306_move_up(uint8_t height)
  * Font     => Font waarmee we gaan schrijven
  * color    => Black or White
  */
-char ssd1306_write_char(char ch, FontDef Font, SSD1306_Color color)
+char ssd1306_write_char(char ch, FontDef font, SSD1306_Color color)
 {
   uint32_t i, b, j;
 
@@ -243,18 +243,18 @@ char ssd1306_write_char(char ch, FontDef Font, SSD1306_Color color)
     return 0;
 
   // Check remaining space on current line
-  if (SSD1306_WIDTH < (ssd1306.CurrentX + Font.width) ||
-      SSD1306_HEIGHT < (ssd1306.CurrentY + Font.height))
+  if (SSD1306_WIDTH < (ssd1306.CurrentX + font.width) ||
+      SSD1306_HEIGHT < (ssd1306.CurrentY + font.height))
   {
     // Not enough space on current line
     return 0;
   }
 
   // Use the font to write
-  for (i = 0; i < Font.height; i++)
+  for (i = 0; i < font.height; i++)
   {
-    b = (uint32_t)Font.data[(ch - 32) * Font.height + i] << 4;
-    for (j = 0; j < Font.width; j++)
+    b = (uint32_t)font.data[(ch - 32) * font.height + i] << 4;
+    for (j = 0; j < font.width; j++)
     {
       if ((b << j) & 0x0800)
       {
@@ -268,18 +268,18 @@ char ssd1306_write_char(char ch, FontDef Font, SSD1306_Color color)
   }
 
   // The current space is now taken
-  ssd1306.CurrentX += Font.width;
+  ssd1306.CurrentX += font.width;
 
   // Return written char for validation
   return ch;
 }
 
 /* Write full string to screenbuffer */
-char ssd1306_write_string(char *str, FontDef Font, SSD1306_Color color)
+char ssd1306_write_string(char *str, FontDef font, SSD1306_Color color)
 {
   while (*str)
   {
-    if (ssd1306_write_char(*str, Font, color) != *str)
+    if (ssd1306_write_char(*str, font, color) != *str)
     {
       // Char could not be written
       return *str;

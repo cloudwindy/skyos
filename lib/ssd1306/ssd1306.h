@@ -24,7 +24,7 @@ _BEGIN_STD_C
 #define SSD1306_X_OFFSET_UPPER 0
 #endif
 
-#include "ssd1306_fonts.h"
+#include "fonts.h"
 
 /* vvv SPI config vvv */
 

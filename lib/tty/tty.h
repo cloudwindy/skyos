@@ -3,7 +3,7 @@
 
 #include "ssd1306.h"
 
-#define TTY_FONT (Font_6x8)
+#define TTY_FONT (Font)
 
 #define TTY_COLOR (White)
 #define TTY_BG_COLOR (Black)
