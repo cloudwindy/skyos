@@ -5,6 +5,7 @@
 #include "pwm.h"
 
 #include <stdio.h>
+#include <string.h>
 #include <libopencm3/stm32/rtc.h>
 #include <libopencm3/cm3/nvic.h>
 
@@ -17,16 +18,20 @@ int main(void)
   PwmGenerator gen = {
     .gpio_port = GPIOB,
     .gpios = GPIO1,
+    .low_freq = 1200,
+    .high_freq = 2200,
     .default_cycle = .5,
   };
   pwm_init(&gen);
 
-  printf("Note 500\n");
-  // pwm_gen_rt(&gen, 500, 200, .1);
-  // pwm_gen_rt(&gen, 500, 200, .2);
-  // pwm_gen_rt(&gen, 500, 200, .3);
-  // pwm_gen_rt(&gen, 500, 200, .4);
-  pwm_gen_rt(&gen, 20, 1000, .5);
+  printf("Font TX\n");
+  for (size_t i = 0; i < 1520; i++)
+  {
+    pwm_gen_rt(&gen, 600, 50, 0);
+    delay(5);
+    pwm_send(&gen, Font.data[i], 20);
+    delay(5);
+  }
   printf("Done\n");
   while (true)
   {

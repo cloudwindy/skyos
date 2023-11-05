@@ -68,7 +68,6 @@ static void setup_gpio(void)
   rcc_periph_clock_enable(RCC_GPIOB);
   rcc_periph_clock_enable(RCC_GPIOC);
   rcc_periph_clock_enable(RCC_GPIOD);
-  rcc_periph_clock_enable(RCC_AFIO);
   gpio_set_mode(LED_BANK, GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_OPENDRAIN, LED);
   gpio_set_mode(SSD1306_BANK_RES, GPIO_MODE_OUTPUT_2_MHZ,
