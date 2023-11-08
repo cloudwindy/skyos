@@ -74,7 +74,7 @@ static void setup_gpio(void)
                 GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_RES);
   gpio_set_mode(SSD1306_BANK_DC, GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_DC);
-  gpio_set_mode(SSD1306_BANK_CS, GPIO_MODE_OUTPUT_50_MHZ,
+  gpio_set_mode(SSD1306_BANK_CS, GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_CS);
 }
 

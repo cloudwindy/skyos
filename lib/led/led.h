@@ -10,5 +10,6 @@
 void led_blink(void);
 void led_on(void);
 void led_off(void);
+void led_pwm_dimming(double brightness);
 
 #endif

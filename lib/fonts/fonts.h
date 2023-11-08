@@ -6,9 +6,9 @@
 
 typedef struct
 {
-  const uint8_t width;  /*!< Font width in pixels */
-  const uint8_t height; /*!< Font height in pixels */
-  const uint8_t *data;  /*!< Pointer to data font data array */
+  const uint8_t width;
+  const uint8_t height;
+  const uint8_t *data;
 } FontDef;
 
 extern const FontDef Font;

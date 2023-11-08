@@ -16,15 +16,15 @@ void pwm_init(const PwmGenerator *pwm_gen)
 /**
  * PWM 输出一个字节
  */
-void pwm_send(const PwmGenerator *pwm_gen, uint8_t byte, uint32_t length_per_bit)
+void pwm_send(const PwmGenerator *pwm_gen, uint8_t byte, uint32_t length_of_bit, uint32_t length_between_bit)
 {
   // 逐位输出
   for (int i = 0; i < 8; i++)
   {
     pwm_gen_rt(pwm_gen, byte & 0x01 ? pwm_gen->high_freq : pwm_gen->low_freq,
-               length_per_bit, 0);
+               length_of_bit, 0);
     byte = byte >> 1;
-    delay(length_per_bit);
+    delay(length_between_bit);
   }
 }
 

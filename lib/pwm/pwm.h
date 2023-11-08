@@ -14,6 +14,6 @@ typedef struct
 
 void pwm_init(const PwmGenerator *pwm_gen);
 void pwm_gen_rt(const PwmGenerator *pwm_gen, uint32_t freq, uint32_t length, double cycle);
-void pwm_send(const PwmGenerator *pwm_gen, uint8_t byte, uint32_t length_per_bit);
+void pwm_send(const PwmGenerator *pwm_gen, uint8_t byte, uint32_t length_of_bit, uint32_t length_between_bit);
 
 #endif
