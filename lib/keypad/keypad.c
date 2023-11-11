@@ -72,6 +72,7 @@ uint16_t keypad_scan(void)
   {
     keypad_clear_cols();
     keypad_set_col(i);
+    udelay(1);
     uint8_t row = keypad_get_col();
     keys |= row << i * 4;
   }

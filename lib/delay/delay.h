@@ -11,8 +11,7 @@ typedef void(*interval_cb_func) (void);
 void delay(uint32_t ms);
 uint32_t delay_get_val(void);
 void udelay(uint32_t us);
-void set_interval(uint32_t interval, void (*callback)(void));
+void set_interval(uint32_t ms, void (*callback)(void));
 uint32_t get_interval(void);
-
 
 #endif

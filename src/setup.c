@@ -2,6 +2,7 @@
 #include "led.h"
 #include "delay.h"
 #include "ssd1306.h"
+#include "tty.h"
 #include "keypad.h"
 
 #include <libopencm3/cm3/systick.h>
@@ -30,7 +31,8 @@ static void setup_uart(void);
  */
 void setup(void)
 {
-  setup_iwdg();
+  (void)setup_iwdg;
+  // setup_iwdg();
   setup_rcc();
   setup_systick();
   setup_gpio();
@@ -42,6 +44,7 @@ void setup(void)
   setup_led();
   setup_keypad();
   setup_ssd1306();
+  setup_tty();
   led_off();
 }
 

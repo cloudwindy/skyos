@@ -11,20 +11,18 @@
 #include <libopencm3/stm32/iwdg.h>
 #include <libopencm3/cm3/nvic.h>
 
-
 static void test_tx(void);
 
 int main(void)
 {
   setup();
-  (void)test_tx;
+  test_tx();
   while (true)
   {
     /**
      * 主循环
      */
-    char ch = keypad_getchar();
-    printf(&ch);
+    // keypad_getchar();
     fflush(stdout);
     iwdg_reset();
     delay(10);
@@ -42,13 +40,22 @@ static void test_tx(void)
   };
   pwm_init(&gen);
 
-  printf("Font TX\n");
-  for (size_t i = 0; i < 1520; i++)
+  while (true)
   {
-    pwm_gen_rt(&gen, 1000, 1, 0);
-    pwm_send(&gen, Font.data[i], 1, 1);
-    printf("Byte %i TX\n", i + 1);
+    gpio_set(GPIOB, GPIO1);
+    delay(3);
+    gpio_clear(GPIOB, GPIO1);
+    delay(3);
   }
+  // pwm_gen_rt(&gen, 1200, 1000000, 0);
+  // printf("Font TX\n");
+  // for (size_t i = 0; i < 1520; i++)
+  // {
+  //   iwdg_reset();
+  //   pwm_gen_rt(&gen, 1000, 5, 0);
+  //   pwm_send(&gen, Font.data[i], 5, 5);
+  //   printf("Byte %i TX\n", i + 1);
+  // }
   printf("Done\n");
 }
 
