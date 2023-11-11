@@ -1,5 +1,7 @@
 #include "tty.h"
 
+#include <stdlib.h>
+#include <string.h>
 #include <stdio.h>
 #include <errno.h>
 #include <time.h>
@@ -15,5 +17,6 @@ int _write(int file, char *ptr, int len)
     return -1;
   }
   tty_print(ptr, len);
+  tty_flush();
   return i;
 }

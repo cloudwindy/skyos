@@ -6,7 +6,6 @@ uint8_t cur_col = 0;
 static void tty_putchar(char str);
 static void tty_return(void);
 static void tty_new_line(void);
-static void tty_flush(void);
 
 /**
  * 在虚拟终端上打印字符
@@ -15,7 +14,14 @@ void tty_print(char *str, int len)
 {
   for (int i = 0; i < len; i++)
     tty_putchar(str[i]);
-  tty_flush();
+}
+
+/**
+ * 刷新虚拟终端
+ */
+void tty_flush(void)
+{
+  ssd1306_update();
 }
 
 /**
@@ -77,9 +83,4 @@ static void tty_new_line(void)
     cur_row++;
   }
   tty_return();
-}
-
-static void tty_flush(void)
-{
-  ssd1306_update();
 }

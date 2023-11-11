@@ -2,10 +2,16 @@
 #include "delay.h"
 #include "pwm.h"
 
-PwmGenerator led_pwm_gen = {
+static PwmGenerator led_pwm_gen = {
   .gpio_port = LED_BANK,
   .gpios = LED,
 };
+
+void setup_led(void)
+{
+  gpio_set_mode(LED_BANK, GPIO_MODE_OUTPUT_2_MHZ,
+                GPIO_CNF_OUTPUT_OPENDRAIN, LED);
+}
 
 void led_blink(void)
 {

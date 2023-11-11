@@ -13,6 +13,7 @@
 #define TTY_ROWS (SSD1306_HEIGHT / TTY_FONT_HEIGHT)
 
 void tty_print(char *str, int len);
+void tty_flush(void);
 void tty_clear(void);
 
 #endif
