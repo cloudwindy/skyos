@@ -8,11 +8,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+
 #include <libopencm3/stm32/iwdg.h>
 
 int main(void)
 {
   setup();
+  const char hello_msg[] = "UART command line utility\n";
+  serial_send(hello_msg, sizeof(hello_msg)-1);
 
   char last_char = 0;
 
@@ -54,7 +57,7 @@ int main(void)
           int msglen = strlen(msg);
 
           if (ret < 0)
-            printf("remote_exec: returns %d\n", ret);
+            printf("remote_exec: return %d\n", ret);
 
           if (msglen > 0)
             serial_send(msg, msglen);

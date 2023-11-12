@@ -31,7 +31,7 @@ void led_off(void)
   gpio_set(LED_BANK, LED);
 }
 
-void led_pwm_dimming(double brightness)
+void led_pwm_dimming(int brightness)
 {
   pwm_gen_rt(&led_pwm_gen, 200, 1000, brightness);
 }

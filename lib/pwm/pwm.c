@@ -33,17 +33,17 @@ void pwm_send(const PwmGenerator *pwm_gen, uint8_t byte, uint32_t length_of_bit,
  *
  * freq   Frequency in Hertz
  * length Total length in Microseconds
- * cycle
+ * cycle  0 ~ 255
  */
-void pwm_gen_rt(const PwmGenerator *pwm_gen, uint32_t freq, uint32_t length, double cycle)
+void pwm_gen_rt(const PwmGenerator *pwm_gen, uint32_t freq, uint32_t length, uint8_t cycle)
 {
   if (cycle == 0)
     cycle = pwm_gen->default_cycle;
   
   double period_full = 1000000 / freq;
-  double period_up = period_full * cycle;
-  double period_down = period_full * (1 - cycle);
-  double total_duration = 0;
+  double period_up = (period_full / 255) * cycle;
+  double period_down = (period_full / 255) * (1 - cycle);
+  uint32_t total_duration = 0;
   while (total_duration / 1000 <= length)
   {
     total_duration += period_full;
