@@ -1,5 +1,5 @@
-#ifndef SKYRADIO_TTY_H
-#define SKYRADIO_TTY_H
+#ifndef TTY_H
+#define TTY_H
 
 void setup_tty(void);
 void tty_print(char *str, int len);

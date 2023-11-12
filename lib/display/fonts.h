@@ -4,7 +4,7 @@
 #include "ssd1306_conf.h"
 #include <stdint.h>
 
-typedef struct Font
+typedef struct font
 {
   const uint8_t width;
   const uint8_t height;

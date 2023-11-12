@@ -4,8 +4,10 @@
 
 #define CIRCLE_APPROXIMATION_SEGMENTS (36)
 
+#ifdef ENABLE_CANVAS_DRAW_ARC
 static float deg_to_rad(float par_deg);
 static uint16_t normalize_to0_360(uint16_t par_deg);
+#endif
 
 void canvas_init(Canvas *canvas, uint8_t width, uint8_t height)
 {
@@ -192,6 +194,7 @@ void canvas_polyline(Canvas *canvas, Vertex *par_vertex, uint16_t par_size, Colo
   return;
 }
 
+#ifdef ENABLE_CANVAS_DRAW_ARC
 /*
  * DrawArc. Draw angle is beginning from 4 quart of trigonometric circle (3pi/2)
  * start_angle in degree
@@ -285,6 +288,7 @@ void canvas_draw_arc_with_radius_line(Canvas *canvas, uint8_t x, uint8_t y, uint
   canvas_line(canvas, x, y, xp2, yp2, color);
   return;
 }
+#endif
 
 /* Draw circle by Bresenhem's algorithm */
 void canvas_draw_circle(Canvas *canvas, uint8_t par_x, uint8_t par_y, uint8_t par_r, Color par_color)
@@ -433,6 +437,7 @@ void canvas_draw_bitmap(Canvas *canvas, uint8_t x, uint8_t y, const uint8_t *bit
   return;
 }
 
+#ifdef ENABLE_CANVAS_DRAW_ARC
 /* Convert Degrees to Radians */
 static float deg_to_rad(float par_deg)
 {
@@ -454,3 +459,4 @@ static uint16_t normalize_to0_360(uint16_t par_deg)
   }
   return loc_angle;
 }
+#endif

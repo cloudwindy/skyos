@@ -1,24 +1,27 @@
 #include "setup.h"
 #include "led.h"
 #include "delay.h"
-#include "pwm.h"
 #include "keypad.h"
 #include "serial.h"
+#include "command.h"
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <libopencm3/stm32/iwdg.h>
 
-static void test_tx(void);
-
 int main(void)
 {
   setup();
-  (void)test_tx;
+
   char last_char = 0;
+
   char *serial_buf;
-  serial_buf = malloc(64);
+  serial_buf = malloc(SERIAL_RX_BUFFER_SIZE);
+
+  char *cmd_stmt = NULL;
+  int cmd_stmt_cur = 0;
+
   while (true)
   {
     /**
@@ -29,46 +32,48 @@ int main(void)
     {
       printf("%c", new_char);
     }
-    int len = serial_recv(serial_buf);
-    if (len > 0)
+    int recvlen = serial_recv(serial_buf);
+    if (recvlen > 0)
     {
       led_blink();
-      printf("%s", serial_buf);
-      memset(serial_buf, 0, 64);
+      for (int i = 0; i < recvlen; i++)
+      {
+        char ch = serial_buf[i];
+
+        if (cmd_stmt == NULL)
+          cmd_stmt = calloc(1, SERIAL_RX_BUFFER_SIZE);
+
+        if (ch == '\r')
+          continue;
+
+        if (ch == '\n')
+        {
+          char *msg = malloc(SERIAL_TX_BUFFER_SIZE);
+
+          int ret = remote_exec(msg, cmd_stmt);
+          int msglen = strlen(msg);
+
+          if (ret < 0)
+            printf("remote_exec: returns %d\n", ret);
+
+          if (msglen > 0)
+            serial_send(msg, msglen);
+
+          free(msg);
+          free(cmd_stmt);
+          cmd_stmt = NULL;
+          cmd_stmt_cur = 0;
+
+          continue;
+        }
+        cmd_stmt[cmd_stmt_cur] = ch;
+        cmd_stmt_cur++;
+      }
+      memset(serial_buf, 0, SERIAL_RX_BUFFER_SIZE);
     }
     last_char = new_char;
     fflush(stdout);
     iwdg_reset();
     delay(10);
   }
-}
-
-static void test_tx(void)
-{
-  PwmGenerator gen = {
-      .gpio_port = GPIOB,
-      .gpios = GPIO1,
-      .low_freq = 1200,
-      .high_freq = 2200,
-      .default_cycle = .5,
-  };
-  pwm_init(&gen);
-
-  while (true)
-  {
-    gpio_set(GPIOB, GPIO1);
-    delay(3);
-    gpio_clear(GPIOB, GPIO1);
-    delay(3);
-  }
-  // pwm_gen_rt(&gen, 1200, 1000000, 0);
-  // printf("Font TX\n");
-  // for (size_t i = 0; i < 1520; i++)
-  // {
-  //   iwdg_reset();
-  //   pwm_gen_rt(&gen, 1000, 5, 0);
-  //   pwm_send(&gen, Font.data[i], 5, 5);
-  //   printf("Byte %i TX\n", i + 1);
-  // }
-  printf("Done\n");
 }

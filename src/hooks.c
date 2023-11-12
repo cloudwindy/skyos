@@ -5,6 +5,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <errno.h>
+#include <unistd.h>
 
 #include <libopencm3/stm32/rtc.h>
 #include <libopencm3/cm3/nvic.h>
@@ -13,15 +14,15 @@ int _write(int file, char *ptr, int len);
 
 int _write(int file, char *ptr, int len)
 {
-  int i;
-  if (file != 1 && file != 2)
+  int i = 0;
+  if (file == STDOUT_FILENO || file == STDERR_FILENO)
   {
-    errno = EIO;
-    return -1;
+    tty_print(ptr, len);
+    tty_flush();
+    return i;
   }
-  tty_print(ptr, len);
-  tty_flush();
-  return i;
+  errno = EIO;
+  return -1;
 }
 
 /**
@@ -37,7 +38,7 @@ void rtc_isr(void)
 
 /**
  * USART 端口数据中断
-*/
+ */
 void usart1_isr(void)
 {
   serial_handler();

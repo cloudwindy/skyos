@@ -8,8 +8,6 @@
 #include <libopencm3/stm32/usart.h>
 
 #define SERIAL_PORT (USART1)
-#define SERIAL_TX_BUFFER_SIZE (64)
-#define SERIAL_RX_BUFFER_SIZE (64)
 
 Ring ring;
 uint8_t *rx_buf;
@@ -61,6 +59,10 @@ void serial_handler(void)
     {
       rx_buf[rx_buf_cur] = usart_recv(SERIAL_PORT);
       rx_buf_cur++;
+    }
+    else {
+      /* 丢弃数据 */
+      usart_recv(SERIAL_PORT);
     }
     return;
   }

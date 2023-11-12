@@ -1,5 +1,5 @@
-#ifndef SKYRADIO_LED_H
-#define SKYRADIO_LED_H
+#ifndef LED_H
+#define LED_H
 
 #include <libopencm3/stm32/gpio.h>
 

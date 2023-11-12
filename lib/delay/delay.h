@@ -1,5 +1,5 @@
-#ifndef SKYRADIO_DELAY_H
-#define SKYRADIO_DELAY_H
+#ifndef DELAY_H
+#define DELAY_H
 
 #include <stdint.h>
 #include <libopencm3/stm32/timer.h>
