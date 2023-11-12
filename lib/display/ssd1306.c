@@ -7,8 +7,8 @@
 #include <string.h> // For memcpy
 
 static void ssd1306_reset(void);
-static void ssd1306_write_command(uint8_t byte);
-static void ssd1306_write_data(uint8_t *buffer, size_t size);
+static void ssd1306_write_command(uint8_t command);
+static void ssd1306_write_data(uint8_t *data, size_t size);
 
 /* Initialize the oled screen */
 void setup_ssd1306(void)
@@ -150,27 +150,27 @@ static void ssd1306_reset(void)
 }
 
 // Send a byte to the command register
-static void ssd1306_write_command(uint8_t byte)
+static void ssd1306_write_command(uint8_t command)
 {
   // Select OLED
   gpio_clear(SSD1306_BANK_CS, SSD1306_CS);
   // Command
   gpio_clear(SSD1306_BANK_DC, SSD1306_DC);
-  spi_send(SSD1306_SPI, (uint16_t)byte);
+  spi_send(SSD1306_SPI, (uint16_t)command);
   udelay(1);
   // Unselect OLED
   gpio_set(SSD1306_BANK_CS, SSD1306_CS);
 }
 
 // Send data
-static void ssd1306_write_data(uint8_t *buffer, size_t size)
+static void ssd1306_write_data(uint8_t *data, size_t size)
 {
   // Select OLED
   gpio_clear(SSD1306_BANK_CS, SSD1306_CS);
   // Data
   gpio_set(SSD1306_BANK_DC, SSD1306_DC);
   while (--size)
-    spi_send(SSD1306_SPI, (uint16_t)*buffer++);
+    spi_send(SSD1306_SPI, (uint16_t)*data++);
   udelay(1);
   // Unselect OLED
   gpio_set(SSD1306_BANK_CS, SSD1306_CS);

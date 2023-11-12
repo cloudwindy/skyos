@@ -4,6 +4,7 @@
 #include "ssd1306.h"
 #include "tty.h"
 #include "keypad.h"
+#include "serial.h"
 
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/cm3/nvic.h>
@@ -24,7 +25,7 @@ static void setup_timer(void);
 static void setup_rtc(void);
 static void setup_spi(void);
 static void setup_i2c(void);
-static void setup_uart(void);
+static void setup_usart(void);
 
 /**
  * 初始化函数
@@ -40,11 +41,12 @@ void setup(void)
   setup_rtc();
   setup_spi();
   setup_i2c();
-  setup_uart();
+  setup_usart();
   setup_led();
   setup_keypad();
   setup_ssd1306();
   setup_tty();
+  setup_serial();
   led_off();
 }
 
@@ -166,9 +168,9 @@ static void setup_i2c(void)
 }
 
 /**
- * UART 端口配置
+ * USART 端口配置
  */
-static void setup_uart(void)
+void setup_usart(void)
 {
   rcc_periph_clock_enable(RCC_USART1);
   rcc_periph_reset_pulse(RST_USART1);
@@ -178,11 +180,14 @@ static void setup_uart(void)
   gpio_set_mode(GPIO_BANK_USART1_RX, GPIO_MODE_INPUT,
                 GPIO_CNF_INPUT_PULL_UPDOWN, GPIO_USART1_RX);
 
+  nvic_enable_irq(NVIC_USART1_IRQ);
+
   usart_set_baudrate(USART1, 115200);
   usart_set_databits(USART1, 8);
   usart_set_stopbits(USART1, USART_STOPBITS_1);
   usart_set_parity(USART1, USART_PARITY_NONE);
   usart_set_flow_control(USART1, USART_FLOWCONTROL_NONE);
   usart_set_mode(USART1, USART_MODE_TX_RX);
+  usart_enable_rx_interrupt(USART1);
   usart_enable(USART1);
 }

@@ -3,7 +3,7 @@
 
 #include <libopencm3/stm32/gpio.h>
 
-enum key
+typedef enum key
 {
   key_not_pressed = 0,
 
@@ -26,7 +26,7 @@ enum key
   key_b = 1 << 13,
   key_c = 1 << 14,
   key_d = 1 << 15,
-};
+} Key;
 
 void setup_keypad(void);
 char keypad_getchar(void);

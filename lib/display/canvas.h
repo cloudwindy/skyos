@@ -5,13 +5,13 @@
 
 #include "fonts.h"
 
-typedef enum Color
+typedef enum color
 {
   White,
   Black
 } Color;
 
-typedef struct Canvas
+typedef struct canvas
 {
   uint8_t *buf;
   uint8_t cur_x;
@@ -20,7 +20,7 @@ typedef struct Canvas
   uint8_t height;
 } Canvas;
 
-typedef struct Vertex
+typedef struct vertex
 {
   uint8_t x;
   uint8_t y;

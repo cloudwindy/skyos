@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-typedef struct
+typedef struct pwm_generator
 {
   uint32_t gpio_port;
   uint16_t gpios;

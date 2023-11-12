@@ -2,27 +2,41 @@
 #include "led.h"
 #include "delay.h"
 #include "pwm.h"
-#include "tty.h"
 #include "keypad.h"
+#include "serial.h"
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <libopencm3/stm32/rtc.h>
 #include <libopencm3/stm32/iwdg.h>
-#include <libopencm3/cm3/nvic.h>
 
 static void test_tx(void);
 
 int main(void)
 {
   setup();
-  test_tx();
+  (void)test_tx;
+  char last_char = 0;
+  char *serial_buf;
+  serial_buf = malloc(64);
   while (true)
   {
     /**
      * 主循环
      */
-    // keypad_getchar();
+    char new_char = keypad_getchar();
+    if (new_char != last_char && new_char != 0)
+    {
+      printf("%c", new_char);
+    }
+    int len = serial_recv(serial_buf);
+    if (len > 0)
+    {
+      led_blink();
+      printf("%s", serial_buf);
+      memset(serial_buf, 0, 64);
+    }
+    last_char = new_char;
     fflush(stdout);
     iwdg_reset();
     delay(10);
@@ -57,15 +71,4 @@ static void test_tx(void)
   //   printf("Byte %i TX\n", i + 1);
   // }
   printf("Done\n");
-}
-
-/**
- * RTC 计时器中断
- *
- * 每秒执行一次
- */
-void rtc_isr(void)
-{
-  rtc_clear_flag(RTC_SEC);
-  fflush(stdout);
 }

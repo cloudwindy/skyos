@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <libopencm3/stm32/timer.h>
 
-#define DELAY_PRECISE_TIMER TIM3
+#define DELAY_PRECISE_TIMER (TIM3)
 
 typedef void(*interval_cb_func) (void);
 
