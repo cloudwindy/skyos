@@ -43,10 +43,11 @@ void setup(void)
   setup_i2c();
   setup_usart();
   setup_led();
+  setup_serial();
   setup_keypad();
   setup_ssd1306();
   setup_tty();
-  setup_serial();
+  delay(100);
   led_off();
 }
 

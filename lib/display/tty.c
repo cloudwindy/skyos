@@ -23,7 +23,6 @@ static void tty_new_line(void);
 void setup_tty(void)
 {
   canvas_init(&canvas, SSD1306_WIDTH, SSD1306_HEIGHT);
-  canvas_fill(&canvas, Black);
   ssd1306_update(canvas.buf);
 }
 

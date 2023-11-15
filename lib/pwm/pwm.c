@@ -40,9 +40,9 @@ void pwm_gen_rt(const PwmGenerator *pwm_gen, uint32_t freq, uint32_t length, uin
   if (cycle == 0)
     cycle = pwm_gen->default_cycle;
   
-  double period_full = 1000000 / freq;
-  double period_up = (period_full / 255) * cycle;
-  double period_down = (period_full / 255) * (1 - cycle);
+  float period_full = 1000000 / freq;
+  float period_up = (period_full / 255) * cycle;
+  float period_down = (period_full / 255) * (1 - cycle);
   uint32_t total_duration = 0;
   while (total_duration / 1000 <= length)
   {

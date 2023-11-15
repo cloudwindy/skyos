@@ -11,7 +11,7 @@ static uint16_t normalize_to0_360(uint16_t par_deg);
 
 void canvas_init(Canvas *canvas, uint8_t width, uint8_t height)
 {
-  canvas->buf = malloc(width * height / 8);
+  canvas->buf = calloc(1, width * height / 8);
   canvas->cur_x = 0;
   canvas->cur_y = 0;
   canvas->width = width;
@@ -23,7 +23,7 @@ void canvas_fill(Canvas *canvas, Color color)
 {
   uint32_t i;
 
-  for (i = 0; i < canvas->width * canvas->height; i++)
+  for (i = 0; i < canvas->width * canvas->height/8; i++)
   {
     canvas->buf[i] = (color == Black) ? 0x00 : 0xFF;
   }
