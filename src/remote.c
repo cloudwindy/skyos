@@ -1,10 +1,8 @@
 #include "remote.h"
 
-#include <unistd.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 
 #include <libopencm3/stm32/rtc.h>
 #include <libopencm3/cm3/scb.h>
@@ -66,7 +64,7 @@ static int time_cmd(char *resp, int argc, char *argv[])
 {
   if (argc == 1)
   {
-    sprintf(resp, "time <get|set|format> [set:now]\n");
+    sprintf(resp, "time <get|set> [set:now]\n");
   }
   else if (strcmp(argv[1], "get") == 0)
   {
@@ -82,12 +80,6 @@ static int time_cmd(char *resp, int argc, char *argv[])
     uint32_t val = strtoul(argv[2], NULL, 10);
     rtc_set_counter_val(val);
     sprintf(resp, "time set to %lu\n", val);
-  }
-  else if (strcmp(argv[1], "format") == 0)
-  {
-    time_t rawtime = rtc_get_counter_val();
-    struct tm *info = localtime(&rawtime);
-    strftime(resp, REMOTE_BUFFER_SIZE, "%Y-%m-%d %H:%M:%S %Z\n", info);
   }
   else
   {
