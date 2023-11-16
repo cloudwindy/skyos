@@ -7,45 +7,30 @@
 #include <libopencm3/stm32/rtc.h>
 #include <libopencm3/cm3/scb.h>
 
-typedef int(CommandHandler)(char *resp, int argc, char **argv);
+typedef int(ComponentHandler)(char *resp, int argc, char **argv);
 
 typedef struct command
 {
   const char *name;
-  CommandHandler *handler;
-} Command;
+  ComponentHandler *handler;
+} Component;
 
-static CommandHandler
+static ComponentHandler
     time_cmd,
     reset;
 
 static void error_arg(char *target, int expected, int got);
 
-Command cmd_list[] = {
+Component cmd_list[] = {
     {"time", time_cmd},
     {"reset", reset}};
 
 int remote_exec(char *resp, char *stmt, size_t len)
 {
-  if (stmt[len - 3] == ';')
-  {
-    stmt[len - 3] = '\0';
-    len -= 3;
-  }
-  else if (stmt[len - 2] == '\r')
-  {
-    stmt[len - 2] = '\0';
-    len -= 2;
-  }
-  else if (stmt[len - 1] == '\n')
-  {
-    stmt[len - 1] = '\0';
-    len -= 1;
-  }
-
   if (stmt[0] == '\0')
   {
     resp[0] = '\n';
+    resp[1] = '\0';
     return 0;
   }
 
@@ -64,11 +49,11 @@ int remote_exec(char *resp, char *stmt, size_t len)
     stmt = strtok(NULL, " ");
   }
 
-  for (size_t i = 0; i < sizeof(cmd_list) / sizeof(Command); i++)
+  for (size_t i = 0; i < sizeof(cmd_list) / sizeof(Component); i++)
     if (strcmp(name, cmd_list[i].name) == 0)
       return cmd_list[i].handler(resp, argc, argv);
 
-  sprintf(resp, "unrecognized command: '%s'\n", name);
+  sprintf(resp, "unrecognized component: '%s'\n", name);
   return -3;
 }
 

@@ -30,7 +30,7 @@ int serial_recv(char *buf, size_t len)
   }
   if (rxcur > len)
   {
-    /* Remove received buf */
+    /* remove received buf */
     memcpy(buf, rxbuf, len);
     memmove(rxbuf, rxbuf + len, rxcur - len);
     ret = len;
@@ -62,7 +62,7 @@ int serial_send(const char *s, size_t len)
 
 void serial_handler(void)
 {
-  /* Check if we were called because of RXNE. */
+  /* check if we were called because of RXNE */
   if (((USART_CR1(SERIAL_PORT) & USART_CR1_RXNEIE) != 0) &&
       ((USART_SR(SERIAL_PORT) & USART_SR_RXNE) != 0))
   {
@@ -73,13 +73,13 @@ void serial_handler(void)
     }
     else
     {
-      /* 丢弃数据 */
+      /* discard the RX register */
       usart_recv(SERIAL_PORT);
     }
     return;
   }
 
-  /* Check if we were called because of TXE. */
+  /* check if we were called because of TXE */
   if (((USART_CR1(SERIAL_PORT) & USART_CR1_TXEIE) != 0) &&
       ((USART_SR(SERIAL_PORT) & USART_SR_TXE) != 0))
   {
@@ -87,12 +87,12 @@ void serial_handler(void)
 
     if (ret == -1)
     {
-      /* Disable the TXE interrupt, it's no longer needed. */
+      /* disable the TXE interrupt */
       usart_disable_tx_interrupt(SERIAL_PORT);
     }
     else
     {
-      /* Put data into the transmit register. */
+      /* put data into the TX register */
       usart_send(SERIAL_PORT, ret);
     }
     return;
