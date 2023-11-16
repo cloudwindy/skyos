@@ -9,15 +9,14 @@
 
 #define SERIAL_PORT (USART1)
 
-Ring ring;
-uint8_t *rx_buf;
-size_t rx_buf_cur;
-
-void setup_serial(void)
-{
-  ring_init(&ring, malloc(SERIAL_TX_BUFFER_SIZE), SERIAL_TX_BUFFER_SIZE);
-  rx_buf = malloc(SERIAL_RX_BUFFER_SIZE);
-}
+uint8_t txbuf[SERIAL_TX_BUFFER_SIZE];
+uint8_t rxbuf[SERIAL_RX_BUFFER_SIZE];
+size_t rxcur;
+Ring ring = {
+    .data = txbuf,
+    .size = SERIAL_TX_BUFFER_SIZE,
+    .begin = 0,
+    .end = 0};
 
 /**
  * 串口异步接收
@@ -25,24 +24,24 @@ void setup_serial(void)
 int serial_recv(char *buf, size_t len)
 {
   int ret;
-  if (len == 0 || rx_buf_cur == 0)
+  if (len == 0 || rxcur == 0)
   {
     return 0;
   }
-  if (rx_buf_cur > len)
+  if (rxcur > len)
   {
     /* Remove received buf */
-    memcpy(buf, rx_buf, len);
-    memmove(rx_buf, rx_buf + len, rx_buf_cur - len);
+    memcpy(buf, rxbuf, len);
+    memmove(rxbuf, rxbuf + len, rxcur - len);
     ret = len;
-    rx_buf_cur -= len;
+    rxcur -= len;
   }
   else
   {
     /* RX buf not enough */
-    memcpy(buf, rx_buf, rx_buf_cur);
-    ret = rx_buf_cur;
-    rx_buf_cur = 0;
+    memcpy(buf, rxbuf, rxcur);
+    ret = rxcur;
+    rxcur = 0;
   }
   return ret;
 }
@@ -67,10 +66,10 @@ void serial_handler(void)
   if (((USART_CR1(SERIAL_PORT) & USART_CR1_RXNEIE) != 0) &&
       ((USART_SR(SERIAL_PORT) & USART_SR_RXNE) != 0))
   {
-    if (rx_buf_cur < SERIAL_RX_BUFFER_SIZE)
+    if (rxcur < SERIAL_RX_BUFFER_SIZE)
     {
-      rx_buf[rx_buf_cur] = usart_recv(SERIAL_PORT);
-      rx_buf_cur++;
+      rxbuf[rxcur] = usart_recv(SERIAL_PORT);
+      rxcur++;
     }
     else
     {

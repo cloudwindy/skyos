@@ -4,7 +4,6 @@
 #include "ssd1306.h"
 #include "tty.h"
 #include "keypad.h"
-#include "serial.h"
 
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/cm3/nvic.h>
@@ -43,7 +42,6 @@ void setup(void)
   setup_i2c();
   setup_usart();
   setup_led();
-  setup_serial();
   setup_keypad();
   setup_ssd1306();
   setup_tty();
