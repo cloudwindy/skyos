@@ -28,11 +28,20 @@ Command cmd_list[] = {
 int remote_exec(char *resp, char *stmt, size_t len)
 {
   if (stmt[len - 3] == ';')
+  {
     stmt[len - 3] = '\0';
+    len -= 3;
+  }
   else if (stmt[len - 2] == '\r')
+  {
     stmt[len - 2] = '\0';
+    len -= 2;
+  }
   else if (stmt[len - 1] == '\n')
+  {
     stmt[len - 1] = '\0';
+    len -= 1;
+  }
 
   if (stmt[0] == '\0')
   {
@@ -40,16 +49,19 @@ int remote_exec(char *resp, char *stmt, size_t len)
     return 0;
   }
 
-  int argc = 0;
-  char *argv[REMOTE_MAX_ARGUMENTS] = {NULL};
+  int argc = 1;
+  for (size_t i = 0; i < len; i++)
+    if (stmt[i] == ' ')
+      argc++;
+
+  char **argv = malloc(argc);
 
   stmt = strtok(stmt, " ");
   char *name = stmt;
-  while (stmt != NULL)
+  for (size_t i = 0; stmt != NULL; i++)
   {
-    argv[argc] = stmt;
+    argv[i] = stmt;
     stmt = strtok(NULL, " ");
-    argc++;
   }
 
   for (size_t i = 0; i < sizeof(cmd_list) / sizeof(Command); i++)
