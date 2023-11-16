@@ -11,7 +11,7 @@
 
 Ring ring;
 uint8_t *rx_buf;
-uint8_t rx_buf_cur;
+size_t rx_buf_cur;
 
 void setup_serial(void)
 {
@@ -22,23 +22,35 @@ void setup_serial(void)
 /**
  * 串口异步接收
  */
-int serial_recv(char *buf)
+int serial_recv(char *buf, size_t len)
 {
   int ret;
-  if (rx_buf_cur == 0)
+  if (len == 0 || rx_buf_cur == 0)
   {
     return 0;
   }
-  memcpy(buf, rx_buf, rx_buf_cur);
-  ret = rx_buf_cur;
-  rx_buf_cur = 0;
+  if (rx_buf_cur > len)
+  {
+    /* Remove received buf */
+    memcpy(buf, rx_buf, len);
+    memmove(rx_buf, rx_buf + len, rx_buf_cur - len);
+    ret = len;
+    rx_buf_cur -= len;
+  }
+  else
+  {
+    /* RX buf not enough */
+    memcpy(buf, rx_buf, rx_buf_cur);
+    ret = rx_buf_cur;
+    rx_buf_cur = 0;
+  }
   return ret;
 }
 
 /**
  * 串口异步发送
  */
-int serial_send(const char *s, int len)
+int serial_send(const char *s, size_t len)
 {
   int ret = ring_write(&ring, (uint8_t *)s, len);
   usart_enable_tx_interrupt(SERIAL_PORT);
@@ -60,7 +72,8 @@ void serial_handler(void)
       rx_buf[rx_buf_cur] = usart_recv(SERIAL_PORT);
       rx_buf_cur++;
     }
-    else {
+    else
+    {
       /* 丢弃数据 */
       usart_recv(SERIAL_PORT);
     }

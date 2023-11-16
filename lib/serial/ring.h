@@ -1,9 +1,10 @@
 #ifndef RING_H
 #define RING_H
 
+#include <stddef.h>
 #include <stdint.h>
 
-typedef uint8_t ring_size_t;
+typedef size_t ring_size_t;
 
 typedef struct ring
 {

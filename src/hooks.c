@@ -43,3 +43,8 @@ void usart1_isr(void)
 {
   serial_handler();
 }
+
+void hard_fault_handler(void)
+{
+  __asm__("BKPT");
+}

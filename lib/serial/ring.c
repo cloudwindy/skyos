@@ -28,12 +28,12 @@ int ring_write_ch(Ring *ring, uint8_t ch)
 
 int ring_write(Ring *ring, uint8_t *data, ring_size_t size)
 {
-  int i;
+  ring_size_t i;
 
   for (i = 0; i < size; i++)
   {
     if (ring_write_ch(ring, data[i]) < 0)
-      return -i;
+      return -1;
   }
 
   return i;

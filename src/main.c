@@ -3,7 +3,7 @@
 #include "delay.h"
 #include "keypad.h"
 #include "serial.h"
-#include "command.h"
+#include "remote.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -15,15 +15,9 @@ int main(void)
 {
   setup();
   const char hello_msg[] = "UART command line utility\n";
-  serial_send(hello_msg, sizeof(hello_msg)-1);
+  serial_send(hello_msg, sizeof(hello_msg) - 1);
 
   char last_char = 0;
-
-  char *serial_buf;
-  serial_buf = malloc(SERIAL_RX_BUFFER_SIZE);
-
-  char *cmd_stmt = NULL;
-  int cmd_stmt_cur = 0;
 
   while (true)
   {
@@ -35,46 +29,40 @@ int main(void)
     {
       printf("%c", new_char);
     }
-    int recvlen = serial_recv(serial_buf);
+    last_char = new_char;
+
+    static char recvbuf[REMOTE_BUFFER_SIZE];
+    static int recvcur = 0;
+
+    int recvlen = serial_recv(recvbuf + recvcur, REMOTE_BUFFER_SIZE - recvcur);
+    recvcur += recvlen;
     if (recvlen > 0)
     {
+      /* DATA RX */
       led_blink();
-      for (int i = 0; i < recvlen; i++)
+      recvbuf[recvcur] = '\0';
+      char *recvnext = recvbuf;
+      for (char *end = strchr(recvnext, '\n'); end != NULL; end = strchr(recvnext, '\n'))
       {
-        char ch = serial_buf[i];
+        /* DATA EOF */
+        char *msg = malloc(REMOTE_BUFFER_SIZE);
 
-        if (cmd_stmt == NULL)
-          cmd_stmt = calloc(1, SERIAL_RX_BUFFER_SIZE);
+        int ret = remote_exec(msg, recvnext, end - recvnext + 1);
+        int msglen = strlen(msg);
 
-        if (ch == '\r')
-          continue;
+        if (ret < 0)
+          printf("remote_exec: return %d\n", ret);
 
-        if (ch == '\n')
-        {
-          char *msg = malloc(SERIAL_TX_BUFFER_SIZE);
+        if (msglen > 0)
+          serial_send(msg, msglen);
 
-          int ret = remote_exec(msg, cmd_stmt);
-          int msglen = strlen(msg);
-
-          if (ret < 0)
-            printf("remote_exec: return %d\n", ret);
-
-          if (msglen > 0)
-            serial_send(msg, msglen);
-
-          free(msg);
-          free(cmd_stmt);
-          cmd_stmt = NULL;
-          cmd_stmt_cur = 0;
-
-          continue;
-        }
-        cmd_stmt[cmd_stmt_cur] = ch;
-        cmd_stmt_cur++;
+        free(msg);
+        recvcur = 0;
+        recvnext = end + 1;
+        break;
       }
-      memset(serial_buf, 0, SERIAL_RX_BUFFER_SIZE);
     }
-    last_char = new_char;
+
     fflush(stdout);
     iwdg_reset();
     delay(10);
