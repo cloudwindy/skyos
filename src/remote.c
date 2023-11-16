@@ -30,17 +30,11 @@ Command cmd_list[] = {
 int remote_exec(char *resp, char *stmt, size_t len)
 {
   if (stmt[len - 3] == ';')
-  {
     stmt[len - 3] = '\0';
-  }
   else if (stmt[len - 2] == '\r')
-  {
     stmt[len - 2] = '\0';
-  }
   else if (stmt[len - 1] == '\n')
-  {
     stmt[len - 1] = '\0';
-  }
 
   if (stmt[0] == '\0')
   {
@@ -52,44 +46,31 @@ int remote_exec(char *resp, char *stmt, size_t len)
   char *argv[REMOTE_MAX_ARGUMENTS] = {NULL};
 
   stmt = strtok(stmt, " ");
-  char *name = strdup(stmt);
+  char *name = stmt;
   while (stmt != NULL)
   {
-    argv[argc] = strdup(stmt);
+    argv[argc] = stmt;
     stmt = strtok(NULL, " ");
     argc++;
   }
+
   for (size_t i = 0; i < sizeof(cmd_list) / sizeof(Command); i++)
-  {
     if (strcmp(name, cmd_list[i].name) == 0)
-    {
-      int ret = cmd_list[i].handler(resp, argc, argv);
+      return cmd_list[i].handler(resp, argc, argv);
 
-      free(name);
-      for (int b = 0; b < argc; b++)
-      {
-        free(argv[b]);
-      }
-      return ret;
-    }
-  }
   sprintf(resp, "unrecognized command: '%s'\n", name);
-
-  free(name);
-  for (int i = 0; i < argc; i++)
-  {
-    free(argv[i]);
-  }
   return -3;
 }
 
 static int time_cmd(char *resp, int argc, char *argv[])
 {
-  if (strcmp(argv[1], "get") == 0)
+  if (argc == 1)
   {
-    time_t t;
-    time(&t);
-    sprintf(resp, "%lld\n", t);
+    sprintf(resp, "time <get|set|format> [set:now]\n");
+  }
+  else if (strcmp(argv[1], "get") == 0)
+  {
+    sprintf(resp, "%lu\n", rtc_get_counter_val());
   }
   else if (strcmp(argv[1], "set") == 0)
   {
@@ -104,10 +85,9 @@ static int time_cmd(char *resp, int argc, char *argv[])
   }
   else if (strcmp(argv[1], "format") == 0)
   {
-    time_t rawtime;
-    time(&rawtime);
+    time_t rawtime = rtc_get_counter_val();
     struct tm *info = localtime(&rawtime);
-    strftime(resp, REMOTE_BUFFER_SIZE, "%Y-%m-%d %H:%M:%S %Z", info);
+    strftime(resp, REMOTE_BUFFER_SIZE, "%Y-%m-%d %H:%M:%S %Z\n", info);
   }
   else
   {
