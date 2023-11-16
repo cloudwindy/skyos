@@ -26,7 +26,7 @@ typedef struct vertex
   uint8_t y;
 } Vertex;
 
-void canvas_init(Canvas *canvas, uint8_t width, uint8_t height);
+void canvas_init(Canvas *canvas, uint8_t *buf, uint8_t width, uint8_t height);
 void canvas_fill(Canvas *canvas, Color color);
 Color canvas_get_pix(Canvas *canvas, uint8_t x, uint8_t y);
 void canvas_set_pix(Canvas *canvas, uint8_t x, uint8_t y, Color color);

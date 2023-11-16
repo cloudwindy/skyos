@@ -22,7 +22,8 @@ static void tty_new_line(void);
 
 void setup_tty(void)
 {
-  canvas_init(&canvas, SSD1306_WIDTH, SSD1306_HEIGHT);
+  static uint8_t canvas_buf[SSD1306_WIDTH * SSD1306_HEIGHT / 8] = {0};
+  canvas_init(&canvas, canvas_buf, SSD1306_WIDTH, SSD1306_HEIGHT);
   ssd1306_update(canvas.buf);
 }
 
