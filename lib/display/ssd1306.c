@@ -15,13 +15,7 @@ static void deselect(void);
 /* Initialize the oled screen */
 void setup_ssd1306(void)
 {
-  gpio_set_mode(SSD1306_BANK_RES, GPIO_MODE_OUTPUT_2_MHZ,
-                GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_RES);
-  gpio_set_mode(SSD1306_BANK_DC, GPIO_MODE_OUTPUT_2_MHZ,
-                GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_DC);
-  gpio_set_mode(SSD1306_BANK_CS, GPIO_MODE_OUTPUT_2_MHZ,
-                GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_CS);
-
+  deselect();
   // Reset OLED
   reset();
 
@@ -146,12 +140,9 @@ void ssd1306_set_display_on(bool on)
 
 static void reset(void)
 {
-  // CS = High (not selected)
-  deselect();
-
   // Reset the OLED
   gpio_clear(SSD1306_BANK_RES, SSD1306_RES);
-  delay(3);
+  delay(1);
   gpio_set(SSD1306_BANK_RES, SSD1306_RES);
 }
 
@@ -173,6 +164,8 @@ static void write_data(uint8_t *data, size_t size)
   {
     spi_send(SSD1306_SPI, (uint16_t)*data++);
   }
+  while (!(SPI_SR(SSD1306_SPI) & SPI_SR_TXE))
+    ;
 }
 
 static void select(void)

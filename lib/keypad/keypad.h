@@ -28,7 +28,6 @@ typedef enum key
   key_d = 1 << 15,
 } Key;
 
-void setup_keypad(void);
 char keypad_getchar(void);
 uint16_t keypad_scan(void);
 

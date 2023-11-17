@@ -12,14 +12,6 @@ static uint8_t keypad_get_col(void);
 static void keypad_set_col(uint8_t col);
 static void keypad_clear_cols(void);
 
-void setup_keypad(void)
-{
-  gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ,
-                GPIO_CNF_OUTPUT_PUSHPULL, GPIO0 | GPIO1 | GPIO2 | GPIO3);
-  gpio_set_mode(GPIOB, GPIO_MODE_INPUT,
-                GPIO_CNF_INPUT_PULL_UPDOWN, GPIO6 | GPIO7 | GPIO8 | GPIO9);
-}
-
 char keypad_getchar(void)
 {
   uint16_t keys = keypad_scan();
