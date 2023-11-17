@@ -121,15 +121,15 @@ void ssd1306_update(uint8_t *buf)
   //  * 32px   ==  4 pages
   //  * 64px   ==  8 pages
   //  * 128px  ==  16 pages
+  ssd1306_select();
   for (uint8_t i = 0; i < SSD1306_HEIGHT / 8; i++)
   {
-    ssd1306_select();
     ssd1306_write_command(0xB0 + i); // Set the current RAM page address.
     ssd1306_write_command(0x00 + SSD1306_X_OFFSET_LOWER);
     ssd1306_write_command(0x10 + SSD1306_X_OFFSET_UPPER);
     ssd1306_write_data(&buf[SSD1306_WIDTH * i], SSD1306_WIDTH);
-    ssd1306_deselect();
   }
+  ssd1306_deselect();
 }
 
 void ssd1306_set_contrast(const uint8_t value)
@@ -158,7 +158,7 @@ static void ssd1306_reset(void)
 // Send a byte to the command register
 static void ssd1306_write_command(uint8_t command)
 {
-  // Command
+  // switch to command mode
   gpio_clear(SSD1306_BANK_DC, SSD1306_DC);
   spi_send(SSD1306_SPI, (uint16_t)command);
 }
@@ -167,7 +167,7 @@ static void ssd1306_write_command(uint8_t command)
 static void ssd1306_write_data(uint8_t *data, size_t size)
 {
   // delay before switching to data mode
-  udelay(3);
+  udelay(5);
   gpio_set(SSD1306_BANK_DC, SSD1306_DC);
   while (--size)
   {

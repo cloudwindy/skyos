@@ -35,9 +35,9 @@ void setup(void)
   // setup_iwdg();
   setup_rcc();
   setup_systick();
-  setup_gpio();
   setup_timer();
   setup_rtc();
+  setup_gpio();
   setup_spi();
   setup_i2c();
   setup_usart();
@@ -45,7 +45,6 @@ void setup(void)
   setup_keypad();
   setup_ssd1306();
   setup_tty();
-  delay(100);
   led_off();
 }
 
