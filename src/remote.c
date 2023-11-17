@@ -16,14 +16,15 @@ typedef struct command
 } Component;
 
 static ComponentHandler
-    time_cmd,
-    reset;
+    com_time,
+    com_sys;
 
 static void error_arg(char *target, int expected, int got);
+static void error_action(char *target, char *action);
 
 Component cmd_list[] = {
-    {"time", time_cmd},
-    {"reset", reset}};
+    {"time", com_time},
+    {"sys", com_sys}};
 
 int remote_exec(char *resp, char *stmt, size_t len)
 {
@@ -57,7 +58,7 @@ int remote_exec(char *resp, char *stmt, size_t len)
   return -3;
 }
 
-static int time_cmd(char *resp, int argc, char *argv[])
+static int com_time(char *resp, int argc, char *argv[])
 {
   if (argc == 1)
   {
@@ -80,22 +81,35 @@ static int time_cmd(char *resp, int argc, char *argv[])
   }
   else
   {
-    sprintf(resp, "unknown action '%s'\n", argv[1]);
+    error_action(resp, argv[1]);
   }
 
   return 0;
 }
 
-static int reset(char *resp, int argc, char *argv[])
+static int com_sys(char *resp, int argc, char *argv[])
 {
-  (void)resp;
-  (void)argc;
-  (void)argv;
-
-  scb_reset_system();
+  if (argc == 1)
+  {
+    sprintf(resp, "sys <reset>\n");
+  }
+  else if (strcmp(argv[1], "reset") == 0)
+  {
+    scb_reset_system();
+  }
+  else
+  {
+    error_action(resp, argv[1]);
+  }
+  return 0;
 }
 
 static void error_arg(char *target, int expected, int got)
 {
   sprintf(target, "not enough arguments (expected %d, got %d)\n", expected, got);
+}
+
+static void error_action(char *target, char *action)
+{
+  sprintf(target, "unknown action '%s'\n", action);
 }
