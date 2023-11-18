@@ -46,6 +46,11 @@ int serial_recv(char *buf, size_t len)
   return ret;
 }
 
+size_t serial_recvlen(void)
+{
+  return rxcur;
+}
+
 /**
  * 串口异步发送
  */

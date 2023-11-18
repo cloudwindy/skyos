@@ -22,7 +22,7 @@ void os_exec(const char *name, void (*task_p)(void *), void *const args, uint32_
 {
   if (priority == 0)
   {
-    priority = tskIDLE_PRIORITY + 2;
+    priority = 2;
   }
   if (priority >= configMAX_PRIORITIES)
   {

@@ -25,6 +25,7 @@ static void strip_crlf(char *str, size_t *len_p);
 
 void task_init(void *args __attribute__((unused)))
 {
+  printf("skyOS starting...\n");
   os_exec("task_clean_up", task_clean_up, NULL, 1);
   os_exec("task_remote", task_remote, NULL, 0);
   os_exec("task_keyboard", task_keyboard, NULL, 0);
@@ -41,25 +42,37 @@ static void task_remote(void *args __attribute__((unused)))
     printf("serial_send: %d\n", ret);
   }
 
+  /* Allocate receive buffer. */
+  char *recvbuf = memalloc(2);
+  size_t recvbuf_size = 2;
+  /* Indicate how much buffer is used. */
+  size_t recvcur = 0;
+
   while (true)
   {
-    /* Receive buffer. */
-    static char recvbuf[REMOTE_BUFFER_SIZE];
-    /* Indicate how much buffer is used. */
-    static int recvcur = 0;
-
-    /**
-     * serial_recv:
-     * 1. Skip the used parts of the buffer. (+ recvcur)
-     * 2. Prevent overflowing. (- recvcur)
-     * 3. Write to recvbuf.
-     */
-    int recvlen = serial_recv(recvbuf + recvcur, REMOTE_BUFFER_SIZE - recvcur);
-    /* Indicate more buffer is used. */
-    recvcur += recvlen;
+    /* Peek into the buffer. */
+    size_t recvlen = serial_recvlen();
     if (recvlen > 0)
-    { /* Data RX. */
-      led_blink();
+    { /* Check if our buffer is sufficient for the incoming data. */
+      if (recvbuf_size < recvcur + recvlen)
+      { /* Replace the old buffer with one with more memory. */
+        char *recvbuf_old = recvbuf;
+        /* TODO: we should implement realloc(). */
+        recvbuf = memalloc(recvbuf_size * 2);
+        memcpy(recvbuf, recvbuf_old, recvbuf_size);
+        memfree(recvbuf_old);
+        recvbuf_size *= 2;
+      }
+
+      /**
+       * serial_recv:
+       * 1. Skip the used parts of the buffer. (+ recvcur)
+       * 2. Prevent overflowing. (- recvcur)
+       * 3. Write to recvbuf.
+       */
+      serial_recv(recvbuf + recvcur, recvbuf_size - recvcur);
+      /* Indicate more buffer is used. */
+      recvcur += recvlen;
       /* Terminate the string. */
       recvbuf[recvcur] = '\0';
       /* The start of data block. */
@@ -105,7 +118,8 @@ static void task_remote(void *args __attribute__((unused)))
         }
       }
       if (start_p != recvbuf)
-      { /* We just had RX. */
+      { /* We just had at least one block. */
+        led_blink();
         if (start_p[0] != '\0')
         { /* ...but the last block didn't end properly. */
           size_t block_size = strlen(start_p);
@@ -119,7 +133,7 @@ static void task_remote(void *args __attribute__((unused)))
         }
       }
     }
-    delay(20);
+    os_delay(20);
   }
 }
 
@@ -135,7 +149,7 @@ static void task_keyboard(void *args __attribute__((unused)))
       printf("%c", new_char);
     }
     last_char = new_char;
-    delay(100);
+    os_delay(100);
   }
 }
 
@@ -145,7 +159,7 @@ static void task_clean_up(void *args __attribute__((unused)))
   {
     fflush(stdout);
     iwdg_reset();
-    delay(500);
+    os_delay(50);
   }
 }
 

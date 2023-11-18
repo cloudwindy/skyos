@@ -13,7 +13,7 @@
  * 
  * Do not use this in setup functions.
  */
-void delay(uint32_t ms)
+void os_delay(uint32_t ms)
 {
   vTaskDelay(pdMS_TO_TICKS(ms));
 }

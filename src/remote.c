@@ -43,12 +43,13 @@ int remote_exec(char *resp, char *stmt, size_t len)
 
   char **argv = memalloc(argc);
 
-  stmt = strtok(stmt, " ");
+  char *save;
+  stmt = strtok_r(stmt, " ", &save);
   char *name = stmt;
   for (size_t i = 0; stmt != NULL; i++)
   {
     argv[i] = stmt;
-    stmt = strtok(NULL, " ");
+    stmt = strtok_r(NULL, " ", &save);
   }
 
   for (size_t i = 0; i < sizeof(cmd_list) / sizeof(Component); i++)
@@ -98,7 +99,12 @@ static int com_sys(char *resp, int argc, char *argv[])
 {
   if (argc == 1)
   {
-    sprintf(resp, "sys <reset>\n");
+    sprintf(resp, "sys <free|reset>\n");
+  }
+  else if (strcmp(argv[1], "free") == 0)
+  {
+    MemInfo info = meminfo();
+    sprintf(resp, "total=%d free=%d\n", info.total, info.free);
   }
   else if (strcmp(argv[1], "reset") == 0)
   {

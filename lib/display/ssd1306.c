@@ -151,7 +151,8 @@ static void reset(void)
 // Send a byte to the command register
 static void write_command(uint8_t command)
 {
-  // switch to command mode
+  // delay before switching to command mode
+  usleep(5);
   gpio_clear(SSD1306_BANK_DC, SSD1306_DC);
   spi_send(SSD1306_SPI, (uint16_t)command);
 }

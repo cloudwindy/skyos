@@ -16,9 +16,9 @@ void setup_led(void)
 void led_blink(void)
 {
   led_on();
-  delay(LED_DELAY);
+  os_delay(LED_DELAY);
   led_off();
-  delay(LED_DELAY);
+  os_delay(LED_DELAY);
 }
 
 void led_on(void)
