@@ -24,7 +24,7 @@ void pwm_send(const PwmGenerator *pwm_gen, uint8_t byte, uint32_t length_of_bit,
     pwm_gen_rt(pwm_gen, byte & 1 ? pwm_gen->high_freq : pwm_gen->low_freq,
                length_of_bit, 0);
     byte = byte >> 1;
-    delay(length_between_bit);
+    sleep(length_between_bit);
   }
 }
 
@@ -48,8 +48,8 @@ void pwm_gen_rt(const PwmGenerator *pwm_gen, uint32_t freq, uint32_t length, uin
   {
     total_duration += period_full;
     gpio_set(pwm_gen->gpio_port, pwm_gen->gpios);
-    udelay(period_up);
+    usleep(period_up);
     gpio_clear(pwm_gen->gpio_port, pwm_gen->gpios);
-    udelay(period_down);
+    usleep(period_down);
   }
 }

@@ -1,4 +1,5 @@
 #include "ssd1306.h"
+#include "ssd1306_conf.h"
 #include "delay.h"
 #include "led.h"
 
@@ -20,7 +21,7 @@ void setup_ssd1306(void)
   reset();
 
   // Wait for the screen to boot
-  delay(100);
+  sleep(100);
 
   // Init OLED
   select();
@@ -102,7 +103,8 @@ void setup_ssd1306(void)
 
   write_command(0x8D); //--set DC-DC enable
   write_command(0x14); //
-  ssd1306_set_display_on(1);   //--turn on SSD1306 panel
+
+  ssd1306_set_display_on(1); //--turn on SSD1306 panel
   deselect();
 }
 
@@ -142,7 +144,7 @@ static void reset(void)
 {
   // Reset the OLED
   gpio_clear(SSD1306_BANK_RES, SSD1306_RES);
-  delay(1);
+  sleep(1);
   gpio_set(SSD1306_BANK_RES, SSD1306_RES);
 }
 
@@ -158,14 +160,12 @@ static void write_command(uint8_t command)
 static void write_data(uint8_t *data, size_t size)
 {
   // delay before switching to data mode
-  udelay(5);
+  usleep(5);
   gpio_set(SSD1306_BANK_DC, SSD1306_DC);
   while (--size)
   {
     spi_send(SSD1306_SPI, (uint16_t)*data++);
   }
-  while (!(SPI_SR(SSD1306_SPI) & SPI_SR_TXE))
-    ;
 }
 
 static void select(void)
@@ -176,6 +176,6 @@ static void select(void)
 static void deselect(void)
 {
   // delay before deselecting
-  udelay(3);
+  usleep(3);
   gpio_set(SSD1306_BANK_CS, SSD1306_CS);
 }

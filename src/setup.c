@@ -2,10 +2,9 @@
 #include "led.h"
 #include "delay.h"
 #include "ssd1306.h"
+#include "ssd1306_conf.h"
 #include "tty.h"
-#include "keypad.h"
 
-#include <libopencm3/cm3/systick.h>
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/iwdg.h>
 #include <libopencm3/stm32/rcc.h>
@@ -18,7 +17,6 @@
 
 static void setup_iwdg(void);
 static void setup_rcc(void);
-static void setup_systick(void);
 static void setup_gpio(void);
 static void setup_timer(void);
 static void setup_rtc(void);
@@ -28,12 +26,14 @@ static void setup_usart(void);
 
 /**
  * Start setup routine.
+ * 
+ * Notice that RTOS is not ready at this point, so do not
+ * call any RTOS functions in setup_*().
  */
 void setup(void)
 {
   setup_iwdg();
   setup_rcc();
-  setup_systick();
   setup_timer();
   setup_rtc();
   setup_gpio();
@@ -72,22 +72,6 @@ static void setup_rcc(void)
 }
 
 /**
- * SysTick Timer Setup
- *
- * Source    AHB
- * Divider   AHB / 1000
- * Frequency 1 kHz
- * Period    1 ms
- */
-static void setup_systick(void)
-{
-  systick_set_clocksource(STK_CSR_CLKSOURCE_AHB_DIV8);
-  systick_set_reload(rcc_ahb_frequency / 8 / 1000 - 1);
-  systick_counter_enable();
-  systick_interrupt_enable();
-}
-
-/**
  * TIM Timer Setup
  *
  * Source    AHB
@@ -120,9 +104,6 @@ static void setup_timer(void)
 static void setup_rtc(void)
 {
   rtc_auto_awake(RCC_LSE, 0x7FFF);
-  nvic_enable_irq(NVIC_RTC_IRQ);
-  nvic_set_priority(NVIC_RTC_IRQ, 1);
-  rtc_interrupt_enable(RTC_SEC);
 }
 
 /**

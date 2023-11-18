@@ -39,7 +39,7 @@ void tty_print(char *str, int len)
 /**
  * 刷新虚拟终端
  */
-void tty_flush(void)
+void tty_update(void)
 {
   ssd1306_update(canvas.buf);
 }

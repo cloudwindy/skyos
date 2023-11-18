@@ -7,25 +7,25 @@ typedef enum key
 {
   key_not_pressed = 0,
 
-  key_1 = 1 << 0,
-  key_4 = 1 << 1,
-  key_7 = 1 << 2,
-  key_star = 1 << 3,
+  key_1 = BIT0,
+  key_4 = BIT1,
+  key_7 = BIT2,
+  key_star = BIT3,
 
-  key_2 = 1 << 4,
-  key_5 = 1 << 5,
-  key_8 = 1 << 6,
-  key_0 = 1 << 7,
+  key_2 = BIT4,
+  key_5 = BIT5,
+  key_8 = BIT6,
+  key_0 = BIT7,
 
-  key_3 = 1 << 8,
-  key_6 = 1 << 9,
-  key_9 = 1 << 10,
-  key_hash = 1 << 11,
+  key_3 = BIT8,
+  key_6 = BIT9,
+  key_9 = BIT10,
+  key_hash = BIT11,
 
-  key_a = 1 << 12,
-  key_b = 1 << 13,
-  key_c = 1 << 14,
-  key_d = 1 << 15,
+  key_a = BIT12,
+  key_b = BIT13,
+  key_c = BIT14,
+  key_d = BIT15,
 } Key;
 
 char keypad_getchar(void);

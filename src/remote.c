@@ -1,4 +1,5 @@
 #include "remote.h"
+#include "mem.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -40,7 +41,7 @@ int remote_exec(char *resp, char *stmt, size_t len)
     if (stmt[i] == ' ')
       argc++;
 
-  char **argv = malloc(argc);
+  char **argv = memalloc(argc);
 
   stmt = strtok(stmt, " ");
   char *name = stmt;
@@ -51,9 +52,15 @@ int remote_exec(char *resp, char *stmt, size_t len)
   }
 
   for (size_t i = 0; i < sizeof(cmd_list) / sizeof(Component); i++)
+  {
     if (strcmp(name, cmd_list[i].name) == 0)
-      return cmd_list[i].handler(resp, argc, argv);
-
+    {
+      int ret = cmd_list[i].handler(resp, argc, argv);
+      memfree(argv);
+      return ret;
+    }
+  }
+  memfree(argv);
   sprintf(resp, "unrecognized component: '%s'\n", name);
   return -3;
 }

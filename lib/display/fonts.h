@@ -1,7 +1,6 @@
 #ifndef FONTS_H
 #define FONTS_H
 
-#include "ssd1306_conf.h"
 #include <stdint.h>
 
 typedef struct font
