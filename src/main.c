@@ -1,21 +1,21 @@
 #include "setup.h"
-
-#include "FreeRTOS.h"
-#include "task.h"
+#include "os.h"
 
 #include "app.h"
+
+#include <stddef.h>
 
 int main(void)
 {
   setup();
 
-  xTaskCreate(app, "APP", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
+  os_exec("task_init", task_init, NULL, 0);
   /**
-   * Start RTOS task scheduler.
-   * 
-   * SysTick will be 
+   * Start up RTOS.
+   *
+   * It will configure the SysTick by itself.
    */
-  vTaskStartScheduler();
+  os_start();
   /* Wait for IWDG reset. */
   for (;;)
     ;

@@ -1,0 +1,57 @@
+#include "os.h"
+
+#include "FreeRTOS.h"
+#include "FreeRTOS/task.h"
+
+#include <stdio.h>
+
+/**
+ * Wrapper of FreeRTOS vTaskStartScheduler.
+ */
+void os_start(void)
+{
+  vTaskStartScheduler();
+}
+
+/**
+ * Wrapper of FreeRTOS xTaskCreate.
+ *
+ * Priority defaults to 2 if zero is given.
+ */
+void os_exec(const char *name, void (*task_p)(void *), void *const args, uint32_t priority)
+{
+  if (priority == 0)
+  {
+    priority = tskIDLE_PRIORITY + 2;
+  }
+  if (priority >= configMAX_PRIORITIES)
+  {
+    printf("os_exec: invalid priority");
+    return;
+  }
+  xTaskCreate(task_p, name, configMINIMAL_STACK_SIZE, args, priority, NULL);
+}
+
+/**
+ * Wrapper of FreeRTOS vTaskDelete.
+ */
+void os_exit(void)
+{
+  vTaskDelete(NULL);
+}
+
+/**
+ * Wrapper of FreeRTOS vPortEnterCritical.
+ */
+void os_mutex_lock(void)
+{
+  vPortEnterCritical();
+}
+
+/**
+ * Wrapper of FreeRTOS vPortExitCritical.
+ */
+void os_mutex_unlock(void)
+{
+  vPortExitCritical();
+}

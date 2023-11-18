@@ -35,8 +35,8 @@
 #define MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
 #include "FreeRTOS.h"
-#include "task.h"
-#include "queue.h"
+#include "FreeRTOS/task.h"
+#include "FreeRTOS/queue.h"
 
 #if ( configUSE_CO_ROUTINES == 1 )
     #include "croutine.h"

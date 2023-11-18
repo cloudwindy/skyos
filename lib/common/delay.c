@@ -1,7 +1,7 @@
 #include "delay.h"
 
 #include "FreeRTOS.h"
-#include "task.h"
+#include "FreeRTOS/task.h"
 
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/timer.h>
@@ -10,6 +10,8 @@
 
 /**
  * Wrapper for vTaskDelay.
+ * 
+ * Do not use this in setup functions.
  */
 void delay(uint32_t ms)
 {

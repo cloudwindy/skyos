@@ -2,6 +2,7 @@
 
 #include "delay.h"
 #include "mem.h"
+#include "os.h"
 
 #include "led.h"
 #include "keypad.h"
@@ -16,12 +17,23 @@
 
 #include <libopencm3/stm32/iwdg.h>
 
+static void task_clean_up(void *);
+static void task_remote(void *);
+static void task_keyboard(void *);
+
 static void strip_crlf(char *str, size_t *len_p);
 
-void app(void *args)
+void task_init(void *args __attribute__((unused)))
 {
-  (void)args;
+  os_exec("task_clean_up", task_clean_up, NULL, 1);
+  os_exec("task_remote", task_remote, NULL, 0);
+  os_exec("task_keyboard", task_keyboard, NULL, 0);
 
+  os_exit();
+}
+
+static void task_remote(void *args __attribute__((unused)))
+{
   static const char hello_msg[] = "UART command line utility\n";
   int ret = serial_send(hello_msg, sizeof(hello_msg) - 1);
   if (ret < 0)
@@ -29,18 +41,8 @@ void app(void *args)
     printf("serial_send: %d\n", ret);
   }
 
-  char last_char = 0;
-
   while (true)
   {
-    /* Keyboard scan routine. */
-    char new_char = keypad_getchar();
-    if (new_char != last_char && new_char != 0)
-    {
-      printf("%c", new_char);
-    }
-    last_char = new_char;
-
     /* Receive buffer. */
     static char recvbuf[REMOTE_BUFFER_SIZE];
     /* Indicate how much buffer is used. */
@@ -117,10 +119,33 @@ void app(void *args)
         }
       }
     }
+    delay(20);
+  }
+}
 
+/* Keyboard scan routine. */
+static void task_keyboard(void *args __attribute__((unused)))
+{
+  char last_char = 0;
+  while (true)
+  {
+    char new_char = keypad_getchar();
+    if (new_char != last_char && new_char != 0)
+    {
+      printf("%c", new_char);
+    }
+    last_char = new_char;
+    delay(100);
+  }
+}
+
+static void task_clean_up(void *args __attribute__((unused)))
+{
+  while (true)
+  {
     fflush(stdout);
     iwdg_reset();
-    delay(10);
+    delay(500);
   }
 }
 

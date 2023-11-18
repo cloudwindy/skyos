@@ -2,7 +2,7 @@
 #include "serial.h"
 
 #include "FreeRTOS.h"
-#include "task.h"
+#include "FreeRTOS/task.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,9 +29,8 @@ int _write(int file, char *ptr, int len)
 }
 
 #if (configCHECK_FOR_STACK_OVERFLOW == 1)
-void vApplicationStackOverflowHook(TaskHandle_t task, char *task_name)
+void vApplicationStackOverflowHook(TaskHandle_t task __attribute__((unused)), char *task_name)
 {
-  (void)task;
   printf("%s: stack overflow\n", task_name);
   /* Wait for IWDG reset. */
   for (;;)
@@ -42,8 +41,7 @@ void vApplicationStackOverflowHook(TaskHandle_t task, char *task_name)
 #if (configUSE_MALLOC_FAILED_HOOK == 1)
 void vApplicationMallocFailedHook(void)
 {
-  (void)task;
-  printf("%s: malloc failed\n", task_name);
+  printf("malloc failed\n");
   /* Wait for IWDG reset. */
   for (;;)
     ;
