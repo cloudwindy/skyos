@@ -1,0 +1,18 @@
+{
+  "$schema": "https://raw.githubusercontent.com/platformio/platformio-core/develop/platformio/assets/schema/library.json",
+  "name": "FreeRTOS",
+  "version": "10.01.0",
+  "description": "Real-time operating system for microcontrollers.",
+  "keywords": "rtos",
+  "homepage": "https://www.freertos.org/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/FreeRTOS/FreeRTOS.git"
+  },
+  "license": "MIT",
+  "platforms": "ststm32",
+  "frameworks": "*",
+  "headers": [
+    "FreeRTOS.h"
+  ]
+}
