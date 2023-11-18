@@ -13,15 +13,14 @@
 #include <libopencm3/stm32/rtc.h>
 #include <libopencm3/cm3/nvic.h>
 
-int _write(int file, char *ptr, int len);
+int _write(int file, char *ptr, int len) __attribute__((used));
 
 int _write(int file, char *ptr, int len)
 {
   int i = 0;
   if (file == STDOUT_FILENO || file == STDERR_FILENO)
   {
-    tty_print(ptr, len);
-    tty_update();
+    serial_send(ptr, len);
     return i;
   }
   errno = EIO;

@@ -10,6 +10,7 @@ typedef struct mem_info
 } MemInfo;
 
 void *memalloc(size_t size);
+void *memcalloc(size_t num, size_t size);
 void memfree(void *ptr);
 MemInfo meminfo(void);
 

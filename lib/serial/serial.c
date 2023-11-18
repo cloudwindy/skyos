@@ -19,7 +19,7 @@ Ring ring = {
     .end = 0};
 
 /**
- * 串口异步接收
+ * None-blocking serial recieve.
  */
 int serial_recv(char *buf, size_t len)
 {
@@ -46,13 +46,16 @@ int serial_recv(char *buf, size_t len)
   return ret;
 }
 
+/**
+ * Get receive buffer fullness.
+ */
 size_t serial_recvlen(void)
 {
   return rxcur;
 }
 
 /**
- * 串口异步发送
+ * Non-blocking serial send.
  */
 int serial_send(const char *s, size_t len)
 {
@@ -67,37 +70,33 @@ int serial_send(const char *s, size_t len)
 
 void serial_handler(void)
 {
-  /* check if we were called because of RXNE */
+
   if (((USART_CR1(SERIAL_PORT) & USART_CR1_RXNEIE) != 0) &&
       ((USART_SR(SERIAL_PORT) & USART_SR_RXNE) != 0))
-  {
+  { /* We were called because of RXNE. */
     if (rxcur < SERIAL_RX_BUFFER_SIZE)
     {
       rxbuf[rxcur] = usart_recv(SERIAL_PORT);
       rxcur++;
     }
     else
-    {
-      /* discard the RX register */
+    { /* Discard the RX register. */
       usart_recv(SERIAL_PORT);
     }
     return;
   }
 
-  /* check if we were called because of TXE */
   if (((USART_CR1(SERIAL_PORT) & USART_CR1_TXEIE) != 0) &&
       ((USART_SR(SERIAL_PORT) & USART_SR_TXE) != 0))
-  {
+  { /* We were called because of TXE. */
     int ret = ring_read_ch(&ring, NULL);
 
     if (ret == -1)
-    {
-      /* disable the TXE interrupt */
+    { /* Disable the TXE interrupt. */
       usart_disable_tx_interrupt(SERIAL_PORT);
     }
     else
-    {
-      /* put data into the TX register */
+    { /* Put data into the TX register. */
       usart_send(SERIAL_PORT, ret);
     }
     return;

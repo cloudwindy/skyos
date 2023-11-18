@@ -13,6 +13,9 @@ static void write_data(uint8_t *data, size_t size);
 static void select(void);
 static void deselect(void);
 
+static void gpio_set_s(uint32_t gpioport, uint16_t gpios);
+static void gpio_clear_s(uint32_t gpioport, uint16_t gpios);
+
 /* Initialize the oled screen */
 void setup_ssd1306(void)
 {
@@ -29,7 +32,7 @@ void setup_ssd1306(void)
 
   write_command(0x20); // Set Memory Addressing Mode
   write_command(0x00); // 00b,Horizontal Addressing Mode; 01b,Vertical Addressing Mode;
-                               // 10b,Page Addressing Mode (RESET); 11b,Invalid
+                       // 10b,Page Addressing Mode (RESET); 11b,Invalid
 
   write_command(0xB0); // Set Page Start Address for Page Addressing Mode,0-7
 
@@ -151,32 +154,50 @@ static void reset(void)
 // Send a byte to the command register
 static void write_command(uint8_t command)
 {
-  // delay before switching to command mode
-  usleep(5);
-  gpio_clear(SSD1306_BANK_DC, SSD1306_DC);
+  // switch to command mode
+  gpio_clear_s(SSD1306_BANK_DC, SSD1306_DC);
   spi_send(SSD1306_SPI, (uint16_t)command);
+  usleep(5);
 }
 
 // Send data
 static void write_data(uint8_t *data, size_t size)
 {
-  // delay before switching to data mode
-  usleep(5);
-  gpio_set(SSD1306_BANK_DC, SSD1306_DC);
+  // switch to data mode
+  gpio_set_s(SSD1306_BANK_DC, SSD1306_DC);
   while (--size)
   {
     spi_send(SSD1306_SPI, (uint16_t)*data++);
+    usleep(5);
   }
 }
 
 static void select(void)
 {
-  gpio_clear(SSD1306_BANK_CS, SSD1306_CS);
+  gpio_clear_s(SSD1306_BANK_CS, SSD1306_CS);
 }
 
 static void deselect(void)
 {
-  // delay before deselecting
-  usleep(3);
-  gpio_set(SSD1306_BANK_CS, SSD1306_CS);
+  gpio_set_s(SSD1306_BANK_CS, SSD1306_CS);
+}
+
+/**
+ * gpio_set with delay so they don't cause problems.
+ */
+static void gpio_set_s(uint32_t gpioport, uint16_t gpios)
+{
+  usleep(5);
+  gpio_set(gpioport, gpios);
+  usleep(5);
+}
+
+/**
+ * gpio_clear with delay so they don't cause problems.
+ */
+static void gpio_clear_s(uint32_t gpioport, uint16_t gpios)
+{
+  usleep(5);
+  gpio_clear(gpioport, gpios);
+  usleep(5);
 }

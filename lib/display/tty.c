@@ -1,4 +1,6 @@
-#include "tty.h"
+#include "tty.h" 
+
+#ifdef ENABLE_TTY
 
 #include "ssd1306.h"
 #include "canvas.h"
@@ -107,3 +109,8 @@ static void tty_new_line(void)
   }
   tty_return();
 }
+#else
+void setup_tty(void)
+{
+}
+#endif

@@ -12,6 +12,14 @@ void *memalloc(size_t size)
 }
 
 /**
+ * Wrapper of FreeRTOS pvPortCalloc.
+*/
+void *memcalloc(size_t num, size_t size)
+{
+  return pvPortCalloc(num, size);
+}
+
+/**
  * Wrapper of FreeRTOS vPortFree.
  */
 void memfree(void *ptr)

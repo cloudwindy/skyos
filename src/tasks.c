@@ -10,6 +10,7 @@
 #include "remote.h"
 #include "ssd1306.h"
 #include "tty.h"
+#include "ui.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -17,31 +18,57 @@
 
 #include <libopencm3/stm32/iwdg.h>
 
-static void task_clean_up(void *);
-static void task_remote(void *);
+static void task_ui(void *);
 static void task_keyboard(void *);
+static void task_remote(void *);
+static void task_stayin_alive(void *);
 
 static void strip_crlf(char *str, size_t *len_p);
 
 void task_init(void *args __attribute__((unused)))
 {
-  printf("skyOS starting...\n");
-  os_exec("task_clean_up", task_clean_up, NULL, 1);
-  os_exec("task_remote", task_remote, NULL, 0);
+  printf("skyOS started\n");
+  os_exec("task_ui", task_ui, NULL, 0);
   os_exec("task_keyboard", task_keyboard, NULL, 0);
+  os_exec("task_remote", task_remote, NULL, 0);
+  os_exec("task_stayin_alive", task_stayin_alive, NULL, 1);
 
   os_exit();
 }
 
+static void task_ui(void *args __attribute__((unused)))
+{
+  UI *ui = memalloc(sizeof(UI));
+  ui_init(ui);
+  ui_text(ui, 0, 0, "skyOS");
+  ui_line_break(ui, 17);
+  while (true)
+  {
+    ui_text(ui, 8, 0, "09:37 PM");
+    ui_update(ui);
+    os_delay(20);
+  }
+}
+
+/* Keyboard scan routine. */
+static void task_keyboard(void *args __attribute__((unused)))
+{
+  char last_char = 0;
+  while (true)
+  {
+    char new_char = keypad_getchar();
+    if (new_char != last_char && new_char != 0)
+    {
+      printf("%c", new_char);
+      fflush(stdout);
+    }
+    last_char = new_char;
+    os_delay(100);
+  }
+}
+
 static void task_remote(void *args __attribute__((unused)))
 {
-  static const char hello_msg[] = "UART command line utility\n";
-  int ret = serial_send(hello_msg, sizeof(hello_msg) - 1);
-  if (ret < 0)
-  {
-    printf("serial_send: %d\n", ret);
-  }
-
   /* Allocate receive buffer. */
   char *recvbuf = memalloc(2);
   size_t recvbuf_size = 2;
@@ -88,7 +115,7 @@ static void task_remote(void *args __attribute__((unused)))
 
         /* Execute command in the data block. */
         char *resp = memalloc(REMOTE_MAX_RESPONSE_SIZE);
-        ret = remote_exec(resp, start_p, block_size);
+        int ret = remote_exec(resp, start_p, block_size);
         size_t resp_len = strlen(resp);
 
         if (ret < 0)
@@ -133,31 +160,17 @@ static void task_remote(void *args __attribute__((unused)))
         }
       }
     }
-    os_delay(20);
+    os_delay(50);
   }
 }
 
-/* Keyboard scan routine. */
-static void task_keyboard(void *args __attribute__((unused)))
-{
-  char last_char = 0;
-  while (true)
-  {
-    char new_char = keypad_getchar();
-    if (new_char != last_char && new_char != 0)
-    {
-      printf("%c", new_char);
-    }
-    last_char = new_char;
-    os_delay(100);
-  }
-}
-
-static void task_clean_up(void *args __attribute__((unused)))
+/**
+ * I'm stayin' alive, stay'in alive.
+ */
+static void task_stayin_alive(void *args __attribute__((unused)))
 {
   while (true)
   {
-    fflush(stdout);
     iwdg_reset();
     os_delay(50);
   }

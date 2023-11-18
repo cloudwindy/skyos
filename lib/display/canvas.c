@@ -136,7 +136,7 @@ char canvas_write_string(Canvas *canvas, const char *str, FontDef font, Color co
   }
 
   // Everything ok
-  return *str;
+  return '\0';
 }
 
 /* Position the cursor */
