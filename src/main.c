@@ -20,7 +20,7 @@ int main(void)
    * It will configure the SysTick by itself.
    */
   os_start();
-  printf("os exit\n");
+  printf("os shut down\n");
   /* Wait for IWDG reset. */
   for (;;)
     ;

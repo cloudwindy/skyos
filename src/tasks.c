@@ -15,7 +15,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
+#include <libopencm3/stm32/rtc.h>
 #include <libopencm3/stm32/iwdg.h>
 
 static void task_ui(void *);
@@ -42,12 +44,24 @@ static void task_ui(void *args __attribute__((unused)))
   ui_init(ui);
   ui_text(ui, 0, 0, "skyOS");
   ui_line_break(ui, 17);
+
+  time_t rawtime;
+  struct tm info;
+  char timetext[9] = {0};
+
   while (true)
   {
-    ui_text(ui, 8, 0, "09:37 PM");
+    rawtime = rtc_get_counter_val();
+    gmtime_r(&rawtime, &info);
+    sprintf(timetext, "%02d:%02d %s",
+            info.tm_hour == 12 ? 12 : info.tm_hour % 12,
+            info.tm_min,
+            info.tm_hour <= 12 ? "AM" : "PM");
+    ui_text(ui, 8, 0, timetext);
     ui_update(ui);
     os_delay(20);
   }
+  os_exit();
 }
 
 /* Keyboard scan routine. */
@@ -74,15 +88,16 @@ static void task_remote(void *args __attribute__((unused)))
   size_t recvbuf_size = 2;
   /* Indicate how much buffer is used. */
   size_t recvcur = 0;
+  /* Indicate how much data is incoming. */
+  size_t recvlen = 0;
 
   while (true)
   {
-    /* Peek into the buffer. */
-    size_t recvlen = serial_recvlen();
+    recvlen = serial_recvlen();
     if (recvlen > 0)
     { /* Check if our buffer is sufficient for the incoming data. */
       if (recvbuf_size < recvcur + recvlen)
-      { /* Replace the old buffer with one with more memory. */
+      { /* Re-allocate the old buffer with more memory. */
         char *recvbuf_old = recvbuf;
         /* TODO: we should implement realloc(). */
         recvbuf = memalloc(recvbuf_size * 2);
@@ -164,13 +179,10 @@ static void task_remote(void *args __attribute__((unused)))
   }
 }
 
-/**
- * I'm stayin' alive, stay'in alive.
- */
 static void task_stayin_alive(void *args __attribute__((unused)))
 {
   while (true)
-  {
+  { /* Life goin' nowhere, somebody help me. */
     iwdg_reset();
     os_delay(50);
   }

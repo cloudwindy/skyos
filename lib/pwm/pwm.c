@@ -5,7 +5,7 @@
 #include <libopencm3/stm32/gpio.h>
 
 /**
- * PWM 启用波形发生器
+ * Initialize PWM generator.
  */
 void pwm_init(const PwmGenerator *pwm_gen)
 {
@@ -14,11 +14,10 @@ void pwm_init(const PwmGenerator *pwm_gen)
 }
 
 /**
- * PWM 输出一个字节
+ * Send one byte.
  */
 void pwm_send(const PwmGenerator *pwm_gen, uint8_t byte, uint32_t length_of_bit, uint32_t length_between_bit)
 {
-  // 逐位输出
   for (int i = 0; i < 8; i++)
   {
     pwm_gen_rt(pwm_gen, byte & 1 ? pwm_gen->high_freq : pwm_gen->low_freq,
@@ -29,7 +28,7 @@ void pwm_send(const PwmGenerator *pwm_gen, uint8_t byte, uint32_t length_of_bit,
 }
 
 /**
- * PWM 实时生成波形
+ * Generate PWM in real time.
  *
  * freq   Frequency in Hertz
  * length Total length in Microseconds

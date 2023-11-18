@@ -19,7 +19,7 @@ Ring ring = {
     .end = 0};
 
 /**
- * None-blocking serial recieve.
+ * Non-blocking serial recieve.
  */
 int serial_recv(char *buf, size_t len)
 {

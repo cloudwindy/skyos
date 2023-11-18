@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <errno.h>  // for EIO
 #include <unistd.h> // for STDOUT_* macros
 
 #include <libopencm3/stm32/rtc.h>
@@ -23,7 +22,6 @@ int _write(int file, char *ptr, int len)
     serial_send(ptr, len);
     return i;
   }
-  errno = EIO;
   return -1;
 }
 

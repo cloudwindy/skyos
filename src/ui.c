@@ -5,7 +5,8 @@
 
 void ui_init(UI *ui)
 {
-  ui->vbuf = memcalloc(SSD1306_HEIGHT * SSD1306_WIDTH / 8, sizeof(uint8_t));
+  static uint8_t vbuf[SSD1306_HEIGHT * SSD1306_WIDTH / 8] = {0};
+  ui->vbuf = vbuf;
   canvas_init(&ui->v, ui->vbuf, SSD1306_WIDTH, SSD1306_HEIGHT);
 }
 
