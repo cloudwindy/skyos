@@ -53,11 +53,11 @@ static void task_ui(void *args __attribute__((unused)))
   {
     rawtime = rtc_get_counter_val();
     gmtime_r(&rawtime, &info);
-    sprintf(timetext, "%02d:%02d %s",
-            info.tm_hour == 12 ? 12 : info.tm_hour % 12,
-            info.tm_min,
-            info.tm_hour <= 12 ? "AM" : "PM");
-    ui_text(ui, 8, 0, timetext);
+    snprintf(timetext, sizeof(timetext), "%02d:%02d %s",
+             info.tm_hour == 12 ? 12 : info.tm_hour % 12,
+             info.tm_min,
+             info.tm_hour <= 12 ? "AM" : "PM");
+    ui_text(ui, sizeof(timetext) - 1, 0, timetext);
     ui_update(ui);
     os_delay(20);
   }
