@@ -1,7 +1,6 @@
 #include "pwm.h"
 #include "delay.h"
 
-#include <stdio.h>
 #include <libopencm3/stm32/gpio.h>
 
 /**

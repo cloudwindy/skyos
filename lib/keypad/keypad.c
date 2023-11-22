@@ -1,8 +1,6 @@
 #include "keypad.h"
 #include "delay.h"
 
-#include <stdio.h>
-
 #define BITMASK_SWITCH(x)                    \
   for (uint64_t bit = 1; x >= bit; bit *= 2) \
     if (x & bit)                             \
@@ -49,6 +47,8 @@ char keypad_getchar(void)
     return '4';
   case key_1:
     return '1';
+  default:
+    return '\0';
   }
   return '\0';
 }

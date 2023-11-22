@@ -4,26 +4,20 @@
 #include "FreeRTOS.h"
 #include "FreeRTOS/task.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h> // for STDOUT_* macros
 
 #include <libopencm3/stm32/rtc.h>
 #include <libopencm3/cm3/nvic.h>
 
-int _write(int file, char *ptr, int len) __attribute__((used));
-
-int _write(int file, char *ptr, int len)
+#ifndef ENANLE_SERIAL_PRINTF
+#include "printf.h"
+#include "serial.h"
+void _putchar(char ch)
 {
-  int i = 0;
-  if (file == STDOUT_FILENO || file == STDERR_FILENO)
-  {
-    serial_send(ptr, len);
-    return i;
-  }
-  return -1;
+  serial_send(&ch, 1);
 }
+#endif
 
 #if (configCHECK_FOR_STACK_OVERFLOW == 1)
 void vApplicationStackOverflowHook(TaskHandle_t task __attribute__((unused)), char *task_name)

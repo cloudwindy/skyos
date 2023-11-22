@@ -1,12 +1,9 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
-#include <stddef.h>
-#ifdef __GNUC__
-
-#include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <errno.h>
 #include <sys/stat.h>
 
 int _end;
@@ -81,4 +78,3 @@ int isatty(int file) __attribute__((weak, alias("_isatty")));
 int getpid(void) __attribute__((weak, alias("_getpid")));
 void kill(int pid, int sig) __attribute__((weak, alias("_kill")));
 
-#endif

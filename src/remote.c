@@ -1,8 +1,8 @@
 #include "remote.h"
 #include "mem.h"
+#include "printf.h"
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <inttypes.h>
 

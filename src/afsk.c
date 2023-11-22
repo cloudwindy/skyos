@@ -1,8 +1,8 @@
 #include "afsk.h"
 #include "delay.h"
 #include "pwm.h"
+#include "printf.h"
 
-#include <stdio.h>
 #include <libopencm3/stm32/gpio.h>
 
 void test_tx(void)

@@ -11,9 +11,9 @@
 #include "ssd1306.h"
 #include "tty.h"
 #include "ui.h"
+#include "printf.h"
 
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include <time.h>
 
@@ -74,7 +74,6 @@ static void task_keyboard(void *args __attribute__((unused)))
     if (new_char != last_char && new_char != 0)
     {
       printf("%c", new_char);
-      fflush(stdout);
     }
     last_char = new_char;
     os_delay(100);

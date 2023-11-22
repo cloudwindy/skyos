@@ -1,9 +1,8 @@
 #include "os.h"
+#include "printf.h"
 
 #include "FreeRTOS.h"
 #include "FreeRTOS/task.h"
-
-#include <stdio.h>
 
 /**
  * Wrapper of FreeRTOS vTaskStartScheduler.
