@@ -92,7 +92,7 @@ static void task_remote(void *args __attribute__((unused)))
   size_t recvlen = 0;
 
   while (true)
-  {
+  { /* Main loop, check for incoming data. */
     recvlen = serial_recvlen();
     if (recvlen > 0)
     { /* Check if our buffer is sufficient for the incoming data. */
@@ -122,6 +122,7 @@ static void task_remote(void *args __attribute__((unused)))
       /* The end of data block. */
       char *end_p = strchr(start_p, REMOTE_DATA_DELIMITER);
 
+      /* Search for data blocks as long as it's not ended. */
       while (end_p != NULL)
       { /* Data end. */
         size_t block_size = end_p - start_p + 1;

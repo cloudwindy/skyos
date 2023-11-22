@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <inttypes.h>
 
 #include <libopencm3/stm32/rtc.h>
 #include <libopencm3/cm3/scb.h>
@@ -74,7 +75,7 @@ static int com_time(char *resp, int argc, char *argv[])
   }
   else if (strcmp(argv[1], "get") == 0)
   {
-    sprintf(resp, "%lu\n", rtc_get_counter_val());
+    sprintf(resp, "%" PRIu32 "\n", rtc_get_counter_val());
   }
   else if (strcmp(argv[1], "set") == 0)
   {
@@ -85,7 +86,7 @@ static int com_time(char *resp, int argc, char *argv[])
     }
     uint32_t val = strtoul(argv[2], NULL, 10);
     rtc_set_counter_val(val);
-    sprintf(resp, "time set to %lu\n", val);
+    sprintf(resp, "time set to %" PRIu32 "\n", val);
   }
   else
   {

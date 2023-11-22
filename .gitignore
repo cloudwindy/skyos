@@ -1,3 +1,5 @@
 .pio
 .vscode
+.cache
 venv
+compile_commands.json
