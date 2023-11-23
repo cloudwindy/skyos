@@ -38,16 +38,15 @@ void pwm_gen_rt(const PwmGenerator *pwm_gen, uint32_t freq, uint32_t length, uin
   if (cycle == 0)
     cycle = pwm_gen->default_cycle;
   
-  float period_full = 1000000 / freq;
-  float period_up = (period_full / 255) * cycle;
-  float period_down = (period_full / 255) * (1 - cycle);
-  uint32_t total_duration = 0;
-  while (total_duration / 1000 <= length)
+  uint32_t period_full = 1000000 / freq;
+  uint16_t period_on = period_full * ((uint16_t)cycle / 256);
+  uint16_t period_off = period_full * ((256 - (uint16_t)cycle) / 256);
+  uint32_t target_i = length / period_full;
+  for (uint32_t i = 0; i < target_i; i++)
   {
-    total_duration += period_full;
     gpio_set(pwm_gen->gpio_port, pwm_gen->gpios);
-    usleep(period_up);
+    usleep(period_on);
     gpio_clear(pwm_gen->gpio_port, pwm_gen->gpios);
-    usleep(period_down);
+    usleep(period_off);
   }
 }
