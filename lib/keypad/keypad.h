@@ -3,32 +3,27 @@
 
 #include <libopencm3/stm32/gpio.h>
 
-typedef enum key
-{
-  key_not_pressed = 0,
+typedef uint16_t Key;
 
-  key_1 = BIT0,
-  key_4 = BIT1,
-  key_7 = BIT2,
-  key_star = BIT3,
-
-  key_2 = BIT4,
-  key_5 = BIT5,
-  key_8 = BIT6,
-  key_0 = BIT7,
-
-  key_3 = BIT8,
-  key_6 = BIT9,
-  key_9 = BIT10,
-  key_hash = BIT11,
-
-  key_a = BIT12,
-  key_b = BIT13,
-  key_c = BIT14,
-  key_d = BIT15,
-} Key;
+#define KEY_NOT_PRESSED 0
+#define KEY_1 BIT0
+#define KEY_4 BIT1
+#define KEY_7 BIT2
+#define KEY_STAR BIT3
+#define KEY_2 BIT4
+#define KEY_5 BIT5
+#define KEY_8 BIT6
+#define KEY_0 BIT7
+#define KEY_3 BIT8
+#define KEY_6 BIT9
+#define KEY_9 BIT10
+#define KEY_HASH BIT11
+#define KEY_A BIT12
+#define KEY_B BIT13
+#define KEY_C BIT14
+#define KEY_D BIT15
 
 char keypad_getchar(void);
-uint16_t keypad_scan(void);
+Key keypad_scan(void);
 
 #endif

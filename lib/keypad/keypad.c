@@ -12,40 +12,42 @@ static void keypad_clear_cols(void);
 
 char keypad_getchar(void)
 {
-  uint16_t keys = keypad_scan();
+  Key keys = keypad_scan();
   BITMASK_SWITCH(keys)
   {
-  case key_d:
+  case KEY_NOT_PRESSED:
+    return '\0';
+  case KEY_D:
     return 'd';
-  case key_c:
+  case KEY_C:
     return 'c';
-  case key_b:
+  case KEY_B:
     return 'b';
-  case key_a:
+  case KEY_A:
     return 'a';
-  case key_hash:
+  case KEY_HASH:
     return '#';
-  case key_9:
+  case KEY_9:
     return '9';
-  case key_6:
+  case KEY_6:
     return '6';
-  case key_3:
+  case KEY_3:
     return '3';
-  case key_0:
+  case KEY_0:
     return '0';
-  case key_8:
+  case KEY_8:
     return '8';
-  case key_5:
+  case KEY_5:
     return '5';
-  case key_2:
+  case KEY_2:
     return '2';
-  case key_star:
+  case KEY_STAR:
     return '*';
-  case key_7:
+  case KEY_7:
     return '7';
-  case key_4:
+  case KEY_4:
     return '4';
-  case key_1:
+  case KEY_1:
     return '1';
   default:
     return '\0';
@@ -56,7 +58,7 @@ char keypad_getchar(void)
 /**
  * 扫描矩阵键盘
  */
-uint16_t keypad_scan(void)
+Key keypad_scan(void)
 {
   uint16_t keys = 0;
   // 扫描 1 ~ 4 列
@@ -77,15 +79,11 @@ uint16_t keypad_scan(void)
  */
 static uint8_t keypad_get_col(void)
 {
-  uint16_t row0 = gpio_get(GPIOB, GPIO6);
-  uint16_t row1 = gpio_get(GPIOB, GPIO7);
-  uint16_t row2 = gpio_get(GPIOB, GPIO8);
-  uint16_t row3 = gpio_get(GPIOB, GPIO9);
   uint8_t row = 0;
-  row |= (row0 > 0) << 0; // B6
-  row |= (row1 > 0) << 1; // B7
-  row |= (row2 > 0) << 2; // B8
-  row |= (row3 > 0) << 3; // B9
+  row |= (gpio_get(GPIOB, GPIO6) > 0) << 0; // B6
+  row |= (gpio_get(GPIOB, GPIO7) > 0) << 1; // B7
+  row |= (gpio_get(GPIOB, GPIO8) > 0) << 2; // B8
+  row |= (gpio_get(GPIOB, GPIO9) > 0) << 3; // B9
   return row;
 }
 
