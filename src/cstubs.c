@@ -27,6 +27,11 @@ void *_sbrk(int incr)
   return prev_heap;
 }
 
+int _write(int file, void *buf, size_t count)
+{
+  return -1;
+}
+
 int _read(int file, void *buf, size_t count)
 {
   return -1;
@@ -37,13 +42,13 @@ int _close(int file)
   return -1;
 }
 
-int __attribute__((used)) _fstat(int file, struct stat *st)
+int _fstat(int file, struct stat *st)
 {
   st->st_mode = S_IFCHR;
   return 0;
 }
 
-int __attribute__((used)) _isatty(int file)
+int _isatty(int file)
 {
   return 1;
 }

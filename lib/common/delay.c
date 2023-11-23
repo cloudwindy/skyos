@@ -30,7 +30,7 @@ void sleep(uint32_t ms)
 /**
  * Sleep using precise timer.
  */
-void usleep(uint32_t us)
+void usleep(uint16_t us)
 {
   timer_set_counter(DELAY_PRECISE_TIMER, 0);
   while (timer_get_counter(DELAY_PRECISE_TIMER) < us)
