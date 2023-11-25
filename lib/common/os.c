@@ -17,7 +17,7 @@ void os_start(void)
  *
  * Priority defaults to 2 if zero is given.
  */
-void os_exec(const char *name, void (*task_p)(void *), void *const args, uint32_t priority)
+void os_exec(const char *name, task *task_p, void *const args, uint32_t priority)
 {
   if (priority == 0)
   {

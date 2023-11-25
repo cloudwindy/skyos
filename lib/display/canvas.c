@@ -16,13 +16,15 @@ void canvas_init(Canvas *canvas, uint8_t *buf, uint8_t width, uint8_t height)
   canvas->cur_y = 0;
   canvas->width = width;
   canvas->height = height;
+  canvas->len = width * ((height + 7) / 8);
 }
 
 /* Fill the whole screen with the given color */
 void canvas_fill(Canvas *canvas, Color color)
 {
-  for (uint32_t i = canvas->width * canvas->height / 8 - 1;
-       i >= 0; i++)
+  uint32_t i;
+
+  for (i = 0; i < canvas->len; i++)
   {
     canvas->buf[i] = (color == Black) ? 0x00 : 0xFF;
   }
@@ -77,11 +79,12 @@ void canvas_move_up(Canvas *canvas, uint8_t height)
 
 /*
  * Draw 1 char to the screen buffer
- * ch       => char om weg te schrijven
- * Font     => Font waarmee we gaan schrijven
- * color    => Black or White
+ * ch        => character to be written
+ * font      => Font used
+ * color     => Black or White
+ * overwrite => Overwrite existing character
  */
-char canvas_write_char(Canvas *canvas, char ch, FontDef font, Color color)
+char canvas_write_char(Canvas *canvas, char ch, FontDef font, Color color, bool overwrite)
 {
   uint32_t i, b, j;
 
@@ -108,7 +111,7 @@ char canvas_write_char(Canvas *canvas, char ch, FontDef font, Color color)
         canvas_set_pix(canvas, canvas->cur_x + j,
                        canvas->cur_y + i, (Color)color);
       }
-      else
+      else if (overwrite)
       {
         canvas_set_pix(canvas, canvas->cur_x + j,
                        canvas->cur_y + i, (Color)!color);
@@ -124,11 +127,11 @@ char canvas_write_char(Canvas *canvas, char ch, FontDef font, Color color)
 }
 
 /* Write full string to screenbuffer */
-char canvas_write_string(Canvas *canvas, const char *str, FontDef font, Color color)
+char canvas_write_string(Canvas *canvas, const char *str, FontDef font, Color color, bool overwrite)
 {
   while (*str)
   {
-    if (canvas_write_char(canvas, *str, font, color) != *str)
+    if (canvas_write_char(canvas, *str, font, color, overwrite) != *str)
     {
       // Char could not be written
       return *str;

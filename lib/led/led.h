@@ -7,7 +7,6 @@
 #define LED_BANK GPIOC
 #define LED GPIO13
 
-void setup_led(void);
 void led_blink(void);
 void led_on(void);
 void led_off(void);

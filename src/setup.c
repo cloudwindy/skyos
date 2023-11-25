@@ -35,14 +35,13 @@ static void setup_usart(void);
 void setup(void)
 {
   setup_iwdg();
+  setup_gpio();
   setup_rcc();
   setup_timer();
   setup_rtc();
-  setup_gpio();
   setup_spi();
   setup_i2c();
   setup_usart();
-  setup_led();
   setup_ssd1306();
   setup_tty();
   led_off();
@@ -112,6 +111,7 @@ static void setup_rtc(void)
  * GPIO Ports Setup
  *
  * Set all unused pins as analog input to save power.
+ * Set C13 led pin.
  * Set SPI and I2C pins as alternative function output.
  * Set SSD1306 control pins.
  * Set keyboard scan pins.
@@ -126,6 +126,9 @@ static void setup_gpio(void)
                 GPIO_CNF_INPUT_ANALOG, GPIO_ALL);
   gpio_set_mode(GPIOB, GPIO_MODE_INPUT,
                 GPIO_CNF_INPUT_ANALOG, GPIO_ALL);
+
+  gpio_set_mode(LED_BANK, GPIO_MODE_OUTPUT_2_MHZ,
+                GPIO_CNF_OUTPUT_OPENDRAIN, LED);
 
   gpio_set_mode(GPIO_BANK_SPI1_SCK, GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_SPI1_SCK |

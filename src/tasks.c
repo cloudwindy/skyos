@@ -20,10 +20,7 @@
 #include <libopencm3/stm32/rtc.h>
 #include <libopencm3/stm32/iwdg.h>
 
-static void task_ui(void *);
-static void task_keyboard(void *);
-static void task_remote(void *);
-static void task_stayin_alive(void *);
+static task task_ui, task_keyboard, task_remote, task_stayin_alive;
 
 static void strip_crlf(char *str, size_t *len_p);
 
@@ -42,8 +39,12 @@ static void task_ui(void *args __attribute__((unused)))
 {
   UI *ui = memalloc(sizeof(UI));
   ui_init(ui);
+  os_delay(1000);
   ui_text(ui, 0, 0, "skyOS");
   ui_line_break(ui, 17);
+  ui_update(ui);
+  os_delay(1000);
+  ui_text_clear(ui, 0, 0, 5);
 
   time_t rawtime;
   struct tm info;
@@ -51,15 +52,22 @@ static void task_ui(void *args __attribute__((unused)))
 
   while (true)
   {
-    rawtime = rtc_get_counter_val();
-    gmtime_r(&rawtime, &info);
-    snprintf(timetext, sizeof(timetext), "%02d:%02d %s",
-             info.tm_hour == 12 ? 12 : info.tm_hour % 12,
-             info.tm_min,
-             info.tm_hour <= 12 ? "AM" : "PM");
-    ui_text(ui, sizeof(timetext) - 1, 0, timetext);
+    ui_clear(ui);
+    ui_line_break(ui, 17);
+    { /* Update frequency. */
+      ui_text(ui, 0, 1, "VFO 433.500");
+    }
+    { /* Update time. */
+      rawtime = rtc_get_counter_val();
+      gmtime_r(&rawtime, &info);
+      snprintf(timetext, sizeof(timetext), "%02d:%02d %s",
+               info.tm_hour == 12 ? 12 : info.tm_hour % 12,
+               info.tm_min,
+               info.tm_hour <= 12 ? "AM" : "PM");
+      ui_text(ui, sizeof(timetext) - 1, 0, timetext);
+    }
     ui_update(ui);
-    os_delay(20);
+    os_delay(200);
   }
   os_exit();
 }
