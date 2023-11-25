@@ -291,7 +291,7 @@ void canvas_draw_arc_with_radius_line(Canvas *canvas, uint8_t x, uint8_t y, uint
   canvas_line(canvas, x, y, first_point_x, first_point_y, color);
   canvas_line(canvas, x, y, xp2, yp2, color);
   return;
-}:
+}
 #endif
 
 /* Draw circle by Bresenhem's algorithm */
