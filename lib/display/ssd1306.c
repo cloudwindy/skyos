@@ -94,7 +94,7 @@ void setup_ssd1306(void)
   // Init OLED
   select();
   const uint8_t *cmd_p = init_sequence;
-  for (size_t i = sizeof(init_sequence); i >= 0; i--)
+  for (size_t i = 0; i < sizeof(init_sequence); i++)
   {
     write_command(*cmd_p++);
   }

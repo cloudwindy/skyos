@@ -39,9 +39,8 @@ static void task_ui(void *args __attribute__((unused)))
 {
   UI *ui = memalloc(sizeof(UI));
   ui_init(ui);
-  os_delay(1000);
   ui_text(ui, 0, 0, "skyOS");
-  ui_line_break(ui, 17);
+  ui_line_break(ui, 16);
   ui_update(ui);
   os_delay(1000);
   ui_text_clear(ui, 0, 0, 5);
@@ -53,9 +52,10 @@ static void task_ui(void *args __attribute__((unused)))
   while (true)
   {
     ui_clear(ui);
-    ui_line_break(ui, 17);
+    ui_line_break(ui, 16);
     { /* Update frequency. */
-      ui_text(ui, 0, 1, "VFO 433.500");
+      ui_text(ui, 0, 1, " VFO 433.500");
+      ui_text(ui, 0, 3, " VFO 433.500");
     }
     { /* Update time. */
       rawtime = rtc_get_counter_val();
