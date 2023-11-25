@@ -46,7 +46,6 @@ int remote_exec(char *resp, char *stmt, size_t len)
 
   char *save;
   stmt = strtok_r(stmt, " ", &save);
-  char *name = stmt;
   for (size_t i = 0; stmt != NULL; i++)
   {
     argv[i] = stmt;
@@ -55,7 +54,7 @@ int remote_exec(char *resp, char *stmt, size_t len)
 
   for (size_t i = 0; i < sizeof(cmd_list) / sizeof(Component); i++)
   {
-    if (strcmp(name, cmd_list[i].name) == 0)
+    if (strcmp(argv[0], cmd_list[i].name) == 0)
     {
       int ret = cmd_list[i].handler(resp, argc, argv);
       memfree(argv);
@@ -63,7 +62,7 @@ int remote_exec(char *resp, char *stmt, size_t len)
     }
   }
   memfree(argv);
-  sprintf(resp, "unrecognized component: '%s'\n", name);
+  sprintf(resp, "unrecognized component: '%s'\n", argv[0]);
   return -3;
 }
 

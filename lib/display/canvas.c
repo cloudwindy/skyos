@@ -21,9 +21,8 @@ void canvas_init(Canvas *canvas, uint8_t *buf, uint8_t width, uint8_t height)
 /* Fill the whole screen with the given color */
 void canvas_fill(Canvas *canvas, Color color)
 {
-  uint32_t i;
-
-  for (i = 0; i < canvas->width * canvas->height / 8; i++)
+  for (uint32_t i = canvas->width * canvas->height / 8 - 1;
+       i >= 0; i++)
   {
     canvas->buf[i] = (color == Black) ? 0x00 : 0xFF;
   }
@@ -106,11 +105,13 @@ char canvas_write_char(Canvas *canvas, char ch, FontDef font, Color color)
     {
       if ((b << j) & 0x0800)
       {
-        canvas_set_pix(canvas, canvas->cur_x + j, (canvas->cur_y + i), (Color)color);
+        canvas_set_pix(canvas, canvas->cur_x + j,
+                       canvas->cur_y + i, (Color)color);
       }
       else
       {
-        canvas_set_pix(canvas, canvas->cur_x + j, (canvas->cur_y + i), (Color)!color);
+        canvas_set_pix(canvas, canvas->cur_x + j,
+                       canvas->cur_y + i, (Color)!color);
       }
     }
   }
@@ -287,7 +288,7 @@ void canvas_draw_arc_with_radius_line(Canvas *canvas, uint8_t x, uint8_t y, uint
   canvas_line(canvas, x, y, first_point_x, first_point_y, color);
   canvas_line(canvas, x, y, xp2, yp2, color);
   return;
-}
+}:
 #endif
 
 /* Draw circle by Bresenhem's algorithm */
