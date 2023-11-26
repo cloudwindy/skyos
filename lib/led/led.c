@@ -1,5 +1,5 @@
 #include "led.h"
-#include "delay.h"
+#include "os.h"
 #include "pwm.h"
 
 static PwmGenerator led_pwm_gen = {

@@ -1,9 +1,6 @@
 #include "serial.h"
 #include "ring.h"
-#include "led.h"
-#include "delay.h"
 
-#include <stdlib.h>
 #include <string.h>
 #include <libopencm3/stm32/usart.h>
 

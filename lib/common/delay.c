@@ -9,16 +9,6 @@
 #define DELAY_PRECISE_TIMER (TIM3)
 
 /**
- * Wrapper for vTaskDelay.
- * 
- * Do not use this in setup functions.
- */
-void os_delay(uint32_t ms)
-{
-  vTaskDelay(pdMS_TO_TICKS(ms));
-}
-
-/**
  * Sleep using precise timer.
  */
 void sleep(uint32_t ms)
