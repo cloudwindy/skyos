@@ -1,8 +1,9 @@
 #ifndef SKYRADIO_APP_H
 #define SKYRADIO_APP_H
 
+#include "ui.h"
+
 #include <stdbool.h>
-#include <stdint.h>
 
 typedef enum key_press
 {
@@ -11,6 +12,10 @@ typedef enum key_press
   kp_long_press_released
 } KeyPress;
 
-void app_process_key(char key, KeyPress kp, uint32_t holding_time);
+typedef void KeyHandler(char key, KeyPress kp, uint32_t hold_time);
+typedef void UIHandler(UI *ui);
+
+KeyHandler app_process_key, home_process_key;
+UIHandler app_update_ui, home_update_ui;
 
 #endif

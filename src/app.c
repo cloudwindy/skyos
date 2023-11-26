@@ -2,31 +2,45 @@
 #include "state.h"
 #include "printf.h"
 
-void app_process_key(char key, KeyPress kp, uint32_t holding_time)
+#include <time.h>
+#include <libopencm3/stm32/rtc.h>
+
+static void ui_status_bar(UI *ui);
+
+void app_update_ui(UI *ui)
 {
-  (void)holding_time;
-  if (kp == kp_short_press_released)
+  VolatileState *vst = vstate();
+  switch (vst->fun)
   {
-    switch (key)
-    {
-    case 'b':
-      state_freq_step_up();
-      break;
-    case 'c':
-      state_freq_step_down();
-      break;
-    }
+  case fun_home:
+    ui_status_bar(ui);
+    home_update_ui(ui);
+    break;
   }
-  else
+}
+
+void app_process_key(char key, KeyPress kp, uint32_t hold_time)
+{
+  VolatileState *vst = vstate();
+  switch (vst->fun)
   {
-    switch (key)
-    {
-    case 'b':
-      state_freq_step_up();
-      break;
-    case 'c':
-      state_freq_step_down();
-      break;
-    }
+  case fun_home:
+    home_process_key(key, kp, hold_time);
   }
+}
+
+static void ui_status_bar(UI *ui)
+{
+  static time_t rawtime;
+  static struct tm info;
+  static char timetext[9] = {0};
+  ui_line_break(ui, 16);
+  /* Update time. */
+  rawtime = rtc_get_counter_val();
+  gmtime_r(&rawtime, &info);
+  snprintf(timetext, sizeof(timetext), "%02d:%02d %s",
+           info.tm_hour == 12 ? 12 : info.tm_hour % 12,
+           info.tm_min,
+           info.tm_hour <= 12 ? "AM" : "PM");
+  ui_text(ui, sizeof(timetext) - 1, 0, timetext);
 }

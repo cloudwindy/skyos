@@ -2,6 +2,7 @@
 #include "mem.h"
 
 State g_st;
+VolatileState g_vst;
 
 /**
  * Read only.
@@ -10,6 +11,14 @@ State g_st;
 State *state(void)
 {
   return &g_st;
+}
+
+/**
+ * Read-write.
+ */
+VolatileState *vstate(void)
+{
+  return &g_vst;
 }
 
 void state_freq_step_up(void)
