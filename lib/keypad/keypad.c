@@ -15,40 +15,40 @@ char keypad_getchar(void)
   Key keys = keypad_scan();
   BITMASK_SWITCH(keys)
   {
-  case KEY_NOT_PRESSED:
+  case 0:
     return '\0';
-  case KEY_D:
-    return 'd';
-  case KEY_C:
-    return 'c';
-  case KEY_B:
-    return 'b';
-  case KEY_A:
-    return 'a';
-  case KEY_HASH:
-    return '#';
-  case KEY_9:
-    return '9';
-  case KEY_6:
-    return '6';
-  case KEY_3:
-    return '3';
-  case KEY_0:
-    return '0';
-  case KEY_8:
-    return '8';
-  case KEY_5:
-    return '5';
-  case KEY_2:
-    return '2';
-  case KEY_STAR:
-    return '*';
-  case KEY_7:
-    return '7';
-  case KEY_4:
-    return '4';
-  case KEY_1:
+  case BIT15:
     return '1';
+  case BIT14:
+    return '2';
+  case BIT13:
+    return '3';
+  case BIT12:
+    return 'a';
+  case BIT11:
+    return '4';
+  case BIT10:
+    return '5';
+  case BIT9:
+    return '6';
+  case BIT8:
+    return 'b';
+  case BIT7:
+    return '7';
+  case BIT6:
+    return '8';
+  case BIT5:
+    return '9';
+  case BIT4:
+    return 'c';
+  case BIT3:
+    return '*';
+  case BIT2:
+    return '0';
+  case BIT1:
+    return '#';
+  case BIT0:
+    return 'd';
   default:
     return '\0';
   }
@@ -56,34 +56,33 @@ char keypad_getchar(void)
 }
 
 /**
- * 扫描矩阵键盘
+ * Scan matrix keypad.
  */
 Key keypad_scan(void)
 {
   uint16_t keys = 0;
-  // 扫描 1 ~ 4 列
-  for (uint8_t i = 0; i < 4; i++)
-  {
+  uint8_t i = 4;
+  while (i--)
+  { /* Scan from 1 to 4 */
     keypad_clear_cols();
     keypad_set_col(i);
     usleep(1);
-    uint8_t row = keypad_get_col();
-    keys |= row << i * 4;
+    keys |= keypad_get_col() << i * 4;
   }
   keypad_clear_cols();
   return keys;
 }
 
 /**
- * 获取 1 ~ 4 行的按键状态
+ * 4 bits of current row.
  */
 static uint8_t keypad_get_col(void)
 {
   uint8_t row = 0;
-  row |= (gpio_get(GPIOB, GPIO6) > 0) << 0; // B6
-  row |= (gpio_get(GPIOB, GPIO7) > 0) << 1; // B7
-  row |= (gpio_get(GPIOB, GPIO8) > 0) << 2; // B8
-  row |= (gpio_get(GPIOB, GPIO9) > 0) << 3; // B9
+  row |= (gpio_get(GPIOB, GPIO6) > 0) << 0;
+  row |= (gpio_get(GPIOB, GPIO7) > 0) << 1;
+  row |= (gpio_get(GPIOB, GPIO8) > 0) << 2;
+  row |= (gpio_get(GPIOB, GPIO9) > 0) << 3;
   return row;
 }
 

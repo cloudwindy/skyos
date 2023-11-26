@@ -1,5 +1,6 @@
 #include "tasks.h"
 
+#include "state.h"
 #include "keypad.h"
 #include "printf.h"
 
@@ -8,15 +9,20 @@
 /* Keyboard scan routine. */
 void task_keyboard(void *args __attribute__((unused)))
 {
-  char last_char = 0;
   while (true)
   {
-    char new_char = keypad_getchar();
-    if (new_char != last_char && new_char != 0)
+    char ch = keypad_getchar();
+    switch (ch)
     {
-      printf("%c", new_char);
+    case 'b':
+      state()->vfo_freq += 1000;
+      break;
+    case 'c':
+      State *st = state();
+      if (st->vfo_freq > 1000)
+        st->vfo_freq -= 1000;
+      break;
     }
-    last_char = new_char;
     os_delay(50);
   }
 }
