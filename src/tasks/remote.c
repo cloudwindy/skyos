@@ -9,6 +9,8 @@
 #include <stdbool.h>
 #include <string.h>
 
+#define REMOTE_TICK 50
+
 static void strip_crlf(char *str, size_t *len_p);
 
 void task_remote(void *args __attribute__((unused)))
@@ -106,7 +108,7 @@ void task_remote(void *args __attribute__((unused)))
         }
       }
     }
-    os_delay(50);
+    os_delay(REMOTE_TICK);
   }
 }
 

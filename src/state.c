@@ -1,9 +1,24 @@
 #include "state.h"
 #include "mem.h"
 
-State g_state;
+State g_st;
 
+/**
+ * Read only.
+ * You're not supposed to modify the global state returned by state().
+ */
 State *state(void)
 {
-  return &g_state;
+  return &g_st;
+}
+
+void state_freq_step_up(void)
+{
+  g_st.vfo_freq += g_st.freq_step;
+}
+
+void state_freq_step_down(void)
+{
+  if (g_st.vfo_freq > g_st.freq_step)
+    g_st.vfo_freq -= g_st.freq_step;
 }

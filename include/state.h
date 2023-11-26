@@ -11,10 +11,16 @@ typedef enum freq_selector_mode
 
 typedef struct state
 {
+  struct state_ui {
+    uint32_t hold_delay;
+  } ui;
+  uint32_t freq_step;
   uint32_t vfo_freq;
-  FSMode mode;
+  FSMode fs_mode;
 } State;
 
 State *state(void);
+void state_freq_step_up(void);
+void state_freq_step_down(void);
 
 #endif

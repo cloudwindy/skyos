@@ -1,8 +1,5 @@
 #include "setup.h"
-#include "os.h"
-
-#include "app.h"
-
+#include "tasks.h"
 #include "printf.h"
 
 int main(void)
@@ -20,7 +17,7 @@ int main(void)
    * It will configure the SysTick by itself.
    */
   os_start();
-  printf("os shut down\n");
+  printf("os shut down.\n");
   /* Wait for IWDG reset. */
   for (;;)
     ;

@@ -3,6 +3,7 @@
 
 #include "os.h"
 
-task task_ui, task_keyboard, task_remote;
+void task_init(void *args);
+task task_ui, task_keypad, task_remote;
 
 #endif

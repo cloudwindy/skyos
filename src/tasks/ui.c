@@ -30,7 +30,7 @@ void task_ui(void *args __attribute__((unused)))
     { /* Update frequency. */
       char freq_str[16 + 1];
       State *st = state();
-      switch (st->mode)
+      switch (st->fs_mode)
       {
       case fs_vfo:
         snprintf(freq_str, sizeof(freq_str),
