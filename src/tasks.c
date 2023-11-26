@@ -54,8 +54,7 @@ static void task_ui(void *args __attribute__((unused)))
     ui_clear(ui);
     ui_line_break(ui, 16);
     { /* Update frequency. */
-      ui_text(ui, 0, 1, " VFO 433.500");
-      ui_text(ui, 0, 3, " VFO 433.500");
+      ui_text(ui, 0, 2, " VFO 433.500");
     }
     { /* Update time. */
       rawtime = rtc_get_counter_val();

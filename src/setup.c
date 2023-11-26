@@ -28,7 +28,7 @@ static void setup_usart(void);
 
 /**
  * Start setup routine.
- * 
+ *
  * Notice that RTOS is not ready at this point, so do not
  * call any RTOS functions in setup_*().
  */
@@ -61,7 +61,7 @@ static void setup_iwdg(void)
 
 /**
  * RCC Clock Setup
- * 
+ *
  * Source     HSE (8 MHz)
  * Multiplier 9
  * Frequency  72 MHz
@@ -131,12 +131,10 @@ static void setup_gpio(void)
                 GPIO_CNF_OUTPUT_OPENDRAIN, LED);
 
   gpio_set_mode(GPIO_BANK_SPI1_SCK, GPIO_MODE_OUTPUT_2_MHZ,
-                GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_SPI1_SCK |
-                GPIO_SPI1_MOSI);
+                GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_SPI1_SCK | GPIO_SPI1_MOSI);
 
   gpio_set_mode(GPIO_BANK_I2C1_SCL, GPIO_MODE_OUTPUT_2_MHZ,
-                GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN, GPIO_I2C1_SCL |
-                GPIO_I2C1_SDA);
+                GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN, GPIO_I2C1_SCL | GPIO_I2C1_SDA);
 
   gpio_set_mode(SSD1306_BANK_RES, GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_RES);
@@ -146,11 +144,9 @@ static void setup_gpio(void)
                 GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_CS);
 
   gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ,
-                GPIO_CNF_OUTPUT_PUSHPULL, GPIO0 | GPIO1 |
-                GPIO2 | GPIO3);
+                GPIO_CNF_OUTPUT_PUSHPULL, GPIO0 | GPIO1 | GPIO2 | GPIO3);
   gpio_set_mode(GPIOB, GPIO_MODE_INPUT,
-                GPIO_CNF_INPUT_PULL_UPDOWN, GPIO6 | GPIO7 |
-                GPIO8 | GPIO9);
+                GPIO_CNF_INPUT_PULL_UPDOWN, GPIO6 | GPIO7 | GPIO8 | GPIO9);
 }
 
 /**
@@ -168,13 +164,11 @@ static void setup_spi(void)
   rcc_periph_clock_enable(RCC_SPI1);
   rcc_periph_reset_pulse(RST_SPI1);
 
-  spi_init_master(SPI1, SPI_CR1_BAUDRATE_FPCLK_DIV_8,
+  spi_init_master(SPI1, SPI_CR1_BAUDRATE_FPCLK_DIV_4,
                   SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE,
                   SPI_CR1_CPHA_CLK_TRANSITION_1, SPI_CR1_DFF_8BIT,
                   SPI_CR1_MSBFIRST);
-
-  /* TODO: Switch to full duplex after connecting to flash chip. */
-  spi_set_bidirectional_transmit_only_mode(SPI1);
+  spi_set_full_duplex_mode(SPI1);
 
   /* This is necessary to manage Chip Select signal by ourself. */
   spi_enable_software_slave_management(SPI1);
@@ -195,21 +189,13 @@ static void setup_i2c(void)
   rcc_periph_reset_pulse(RST_I2C1);
 
   i2c_peripheral_disable(I2C1);
-  #ifdef ENABLE_MANUAL_I2C_SPEED
-    uint32 i2c_clock = rcc_apb1_frequency / E6;
-    i2c_set_clock_frequency(I2C1, i2c_clock);
-    i2c_set_standard_mode(I2C1);
-    i2c_set_ccr(I2C1, i2c_clock * 5);
-    i2c_set_trise(I2C1, i2c_clock + 1);
-  #else
-    i2c_set_speed(I2C1, i2c_speed_sm_100k, rcc_apb1_frequency / E6);
-  #endif
+  i2c_set_speed(I2C1, i2c_speed_sm_100k, rcc_apb1_frequency / E6);
   i2c_peripheral_enable(I2C1);
 }
 
 /**
  * USART Port Setup
- * 
+ *
  * Source       APB
  * Baud         115.2 kbps
  * Data         8 bits
