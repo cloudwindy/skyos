@@ -1,5 +1,5 @@
-#ifndef TASKS_H
-#define TASKS_H
+#ifndef SKYRADIO_TASKS_H
+#define SKYRADIO_TASKS_H
 
 #include "os.h"
 

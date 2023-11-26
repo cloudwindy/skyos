@@ -1,4 +1,5 @@
 #include "tasks.h"
+
 #include "keypad.h"
 #include "printf.h"
 
@@ -16,6 +17,6 @@ void task_keyboard(void *args __attribute__((unused)))
       printf("%c", new_char);
     }
     last_char = new_char;
-    os_delay(100);
+    os_delay(50);
   }
 }
