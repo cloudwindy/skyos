@@ -15,7 +15,7 @@
 #include <libopencm3/stm32/i2c.h>
 #include <libopencm3/stm32/usart.h>
 
-#define E6 1000000
+#define E6 (1'000'000)
 
 static void setup_iwdg(void);
 static void setup_rcc(void);

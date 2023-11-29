@@ -2,7 +2,7 @@
 #include "mem.h"
 
 State g_st;
-VolatileState g_vst;
+enum function g_fun = fun_invalid;
 
 /**
  * Read only.
@@ -11,14 +11,6 @@ VolatileState g_vst;
 State *state(void)
 {
   return &g_st;
-}
-
-/**
- * Read-write.
- */
-VolatileState *vstate(void)
-{
-  return &g_vst;
 }
 
 void state_freq_step_up(void)

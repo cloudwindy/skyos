@@ -1,21 +1,60 @@
 #include "w25q.h"
 #include "w25q_opcodes.h"
 
-#include <stddef.h>
-#include <libopencm3/stm32/spi.h>
-
 #define WRITE(data) spi_send(W25Q_SPI, (uint16_t)(data))
+#define READ() spi_read(W25Q_SPI)
 
 static void write(uint8_t *data, size_t size);
 static void select(void);
 static void deselect(void);
 
-void setup_flash(void)
+uint16_t w25q_read_id(void)
 {
+  select();
+
+  WRITE(OP_READ_MANUFACTURER_DEVICE_ID);
+  WRITE(0);
+  WRITE(0);
+  WRITE(0);
+  uint16_t temp = READ() << 8;
+  temp |= READ();
+
   deselect();
-  WRITE(OP_ENABLE_RESET_AND_RESET_DEVICE(0));
-  WRITE(OP_ENABLE_RESET_AND_RESET_DEVICE(1));
-  
+  return temp;
+}
+
+void w25q_read(uint8_t *buf, uint32_t addr, size_t size)
+{
+  select();
+
+  WRITE(OP_READ_DATA);
+  WRITE((uint8_t)addr << 16);
+  WRITE((uint8_t)addr << 8);
+  WRITE((uint8_t)addr);
+  for (size_t i = 0; i < size; i++)
+  {
+    buf[i] = READ();
+  }
+
+  deselect();
+}
+
+void w25q_sleep(void)
+{
+  select();
+
+  WRITE(OP_POWER_DOWN);
+
+  deselect();
+}
+
+void w25q_wakeup(void)
+{
+  select();
+
+  WRITE(OP_RELEASE_POWER_DOWN_DEVICE_ID);
+
+  deselect();
 }
 
 static void write(uint8_t *data, size_t size)

@@ -9,23 +9,26 @@ static void ui_status_bar(UI *ui);
 
 void app_update_ui(UI *ui)
 {
-  VolatileState *vst = vstate();
-  switch (vst->fun)
+  switch (g_fun)
   {
   case fun_home:
     ui_status_bar(ui);
     home_update_ui(ui);
+    break;
+  default:
     break;
   }
 }
 
 void app_process_key(char key, KeyPress kp, uint32_t hold_time)
 {
-  VolatileState *vst = vstate();
-  switch (vst->fun)
+  switch (g_fun)
   {
   case fun_home:
     home_process_key(key, kp, hold_time);
+    break;
+  default:
+    break;
   }
 }
 

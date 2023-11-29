@@ -12,7 +12,7 @@ void task_init(void *args __attribute__((unused)))
 {
   printf("skyOS started\n");
 
-  /* TODO: implement settings */
+  /* TODO: implement state_load */
   State *st = state();
   st->vfo_freq = 438'500'000;
   st->freq_step = 25'000;
