@@ -1,6 +1,7 @@
 #include "app.h"
 #include "state.h"
 #include "printf.h"
+#include "ui.h"
 
 #include <time.h>
 #include <libopencm3/stm32/rtc.h>
@@ -12,6 +13,11 @@ void app_update_ui(UI *ui)
   switch (g_fun)
   {
   case fun_home:
+    ui_status_bar(ui);
+    home_update_ui(ui);
+    break;
+  case fun_fmradio:
+    ui_text(ui, 0, 0, "FM");
     ui_status_bar(ui);
     home_update_ui(ui);
     break;

@@ -6,6 +6,7 @@
 
 typedef struct state
 {
+  bool initialized;
   struct state_ui
   {
     bool enable_welcome_screen;
@@ -30,6 +31,7 @@ typedef struct state
 extern enum function g_fun;
 
 State *state(void);
+void state_restore_to_defaults(void);
 void state_freq_step_up(void);
 void state_freq_step_down(void);
 
