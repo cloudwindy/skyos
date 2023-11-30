@@ -1,5 +1,5 @@
-#ifndef SKYRADIO_SETUP_H
-#define SKYRADIO_SETUP_H
+#ifndef SETUP_H
+#define SETUP_H
 
 void setup(void);
 

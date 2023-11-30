@@ -1,5 +1,5 @@
-#ifndef SKYRADIO_COMMAND_H
-#define SKYRADIO_COMMAND_H
+#ifndef COMMAND_H
+#define COMMAND_H
 
 #include <stddef.h>
 

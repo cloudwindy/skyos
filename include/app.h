@@ -1,5 +1,5 @@
-#ifndef SKYRADIO_APP_H
-#define SKYRADIO_APP_H
+#ifndef APP_H
+#define APP_H
 
 #include "ui.h"
 

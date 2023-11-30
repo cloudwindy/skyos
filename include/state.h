@@ -1,5 +1,5 @@
-#ifndef SKYRADIO_STATE_H
-#define SKYRADIO_STATE_H
+#ifndef STATE_H
+#define STATE_H
 
 #include <stdint.h>
 #include <stdbool.h>

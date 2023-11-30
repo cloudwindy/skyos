@@ -1,5 +1,5 @@
-#ifndef SKYRADIO_AFSK_H
-#define SKYRADIO_AFSK_H
+#ifndef AFSK_H
+#define AFSK_H
 
 void test_tx(void);
 

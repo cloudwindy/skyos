@@ -1,5 +1,5 @@
-#ifndef SKYRADIO_UI_H
-#define SKYRADIO_UI_H
+#ifndef UI_H
+#define UI_H
 
 #include "canvas.h"
 

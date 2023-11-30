@@ -31,9 +31,9 @@ void w25q_read(uint8_t *buf, uint32_t addr, size_t size)
   WRITE((uint8_t)addr << 16);
   WRITE((uint8_t)addr << 8);
   WRITE((uint8_t)addr);
-  for (size_t i = 0; i < size; i++)
+  while (size--)
   {
-    buf[i] = READ();
+    *buf++ = READ();
   }
 
   deselect();
