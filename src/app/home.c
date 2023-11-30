@@ -35,9 +35,11 @@ void home_handler(EvType type, void *event)
     home_update_ui(event);
     break;
   case ev_key:
-    const EvKey *evkey = event;
+  {
+    EvKey *evkey = event;
     home_process_key(evkey->key, evkey->key_press, evkey->hold_time);
     break;
+  }
   default:
     break;
   }
