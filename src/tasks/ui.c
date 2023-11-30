@@ -10,7 +10,7 @@ void task_ui(void *args __attribute__((unused)))
   UI *ui = memalloc(sizeof(UI));
   ui_init(ui);
   State *st = state();
-  if (st->ui.enable_welcome_screen)
+  if (st->ui.show_welcome_screen)
   {
     /* Welcome screen. */
     ui_text(ui, 0, 0, "skyOS");
@@ -23,7 +23,7 @@ void task_ui(void *args __attribute__((unused)))
   while (true)
   {
     ui_clear(ui);
-    app_update_ui(ui);
+    app_handler(ev_ui, ui);
     ui_update(ui);
     os_delay(50);
   }

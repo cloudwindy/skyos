@@ -3,19 +3,31 @@
 
 #include "ui.h"
 
-#include <stdbool.h>
+typedef enum
+{
+  ev_ui,
+  ev_key,
+} EvType;
 
-typedef enum key_press
+typedef enum
 {
   kp_short_press_released,
   kp_long_press_holding,
   kp_long_press_released
 } KeyPress;
 
-typedef void KeyHandler(char key, KeyPress kp, uint32_t hold_time);
-typedef void UIHandler(UI *ui);
+typedef struct
+{
+  char key;
+  KeyPress key_press;
+  uint32_t hold_time;
+} EvKey;
 
-KeyHandler app_process_key, home_process_key;
-UIHandler app_update_ui, home_update_ui;
+typedef UI EvUI;
+
+typedef void EventHandler(EvType type, void *event);
+
+EventHandler app_handler,
+             home_handler;
 
 #endif

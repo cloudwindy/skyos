@@ -2,10 +2,32 @@
 #include "state.h"
 #include "printf.h"
 
+#include <stdint.h>
 #include <string.h>
 
-void home_update_ui(UI *ui)
+static void home_update_ui(UI *ui);
+static void home_process_key(char key, KeyPress kp, uint32_t hold_time);
+
+void home_handler(EvType type, void *event)
 {
+  switch (type)
+  {
+  case ev_ui:
+    home_update_ui(event);
+    break;
+  case ev_key:
+    EvKey *evkey = event;
+    home_process_key(evkey->key, evkey->key_press, evkey->hold_time);
+    break;
+  default:
+    break;
+  }
+
+}
+
+static void home_update_ui(UI *ui)
+{
+  ui_status_bar(ui);
   char freq_str[16 + 1];
   State *st = state();
   switch (st->fs_mode)
@@ -22,7 +44,7 @@ void home_update_ui(UI *ui)
   ui_text(ui, 0, 2, freq_str);
 }
 
-void home_process_key(char key, KeyPress kp, uint32_t hold_time)
+static void home_process_key(char key, enum key_press kp, uint32_t hold_time)
 {
   (void)hold_time;
   if (kp == kp_short_press_released)

@@ -3,7 +3,6 @@
 
 /* Here is a good place to include header files that are required across
 your application. */
-#include "FreeRTOS.h"
 
 #define vPortSVCHandler sv_call_handler
 #define xPortPendSVHandler pend_sv_handler
@@ -52,7 +51,5 @@ priority values, 0 to 15.  This must correspond to the
 configKERNEL_INTERRUPT_PRIORITY setting.  Here 15 corresponds to the lowest
 NVIC value of 255. */
 #define configLIBRARY_KERNEL_INTERRUPT_PRIORITY 15
-
-
 
 #endif /* FREERTOS_CONFIG_H */

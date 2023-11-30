@@ -1,7 +1,10 @@
 #include "ui.h"
 #include "mem.h"
-
+#include "printf.h"
 #include "ssd1306.h"
+
+#include <time.h>
+#include <libopencm3/stm32/rtc.h>
 
 void ui_init(UI *ui)
 {
@@ -36,4 +39,20 @@ void ui_text_clear(UI *ui, uint8_t row, uint8_t col, uint8_t spaces)
 void ui_update(UI *ui)
 {
   ssd1306_update(ui->vbuf);
+}
+
+void ui_status_bar(UI *ui)
+{
+  static time_t rawtime;
+  static struct tm info;
+  static char timetext[9] = {0};
+  ui_line_break(ui, 16);
+  /* Update time. */
+  rawtime = rtc_get_counter_val();
+  gmtime_r(&rawtime, &info);
+  snprintf(timetext, sizeof(timetext), "%02d:%02d %s",
+           info.tm_hour == 12 ? 12 : info.tm_hour % 12,
+           info.tm_min,
+           info.tm_hour <= 12 ? "AM" : "PM");
+  ui_text(ui, sizeof(timetext) - 1, 0, timetext);
 }

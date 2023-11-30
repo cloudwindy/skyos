@@ -16,22 +16,30 @@ char kbd_input(Keyboard *kbd, char key)
 {
   if (key != kbd->key)
   { /* Input new character. */
-    char ch = select(key, 0);
-    if (kbd->ch != '\0')
-    { /* Save previous character. */
-      kbd->buf[kbd->buf_cur] = kbd->ch;
-      kbd->buf_cur++;
-    }
+    kbd_confirm(kbd);
+    kbd->ch = select(key, 0);
     kbd->key = key;
-    kbd->ch = ch;
     kbd->hit = 0;
   }
   else
   { /* Select character. */
     kbd->hit++;
-    char ch = select(key, kbd->hit);
+    kbd->ch = select(key, kbd->hit);
   }
   return kbd->ch;
+}
+
+/* Save previous character. */
+void kbd_confirm(Keyboard *kbd)
+{
+  if (kbd->ch != '\0')
+  {
+    kbd->buf[kbd->buf_cur] = kbd->ch;
+    kbd->buf_cur++;
+    kbd->hit = 0;
+    kbd->key = '\0';
+    kbd->ch = '\0';
+  }
 }
 
 static char select(char key, uint8_t i)

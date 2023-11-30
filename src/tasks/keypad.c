@@ -28,7 +28,12 @@ void task_keypad(void *args __attribute__((unused)))
           hold_repeat_time += KEYPAD_TICK;
           if (hold_repeat_time > KEYPAD_REPEAT_INTERVAL)
           {
-            app_process_key(ch, kp_long_press_holding, hold_time);
+            EvKey event = {
+              .key = ch,
+              .key_press = kp_long_press_holding,
+              .hold_time = hold_time,
+            };
+            app_handler(ev_key, &event);
             hold_repeat_time = 0;
           }
         }
@@ -47,11 +52,21 @@ void task_keypad(void *args __attribute__((unused)))
     { /* Key is not pressed. */
       if (hold_time > st->ui.hold_delay)
       { /* This is a long press released. */
-        app_process_key(holding_ch, kp_long_press_released, hold_time);
+        EvKey event = {
+          .key = ch,
+          .key_press = kp_long_press_released,
+          .hold_time = hold_time,
+        };
+        app_handler(ev_key, &event);
       }
       else if (hold_time > 0)
       { /* This is a short press released. */
-        app_process_key(holding_ch, kp_short_press_released, hold_time);
+        EvKey event = {
+          .key = ch,
+          .key_press = kp_short_press_released,
+          .hold_time = hold_time,
+        };
+        app_handler(ev_key, &event);
       }
       holding_ch = '\0';
       hold_time = 0;

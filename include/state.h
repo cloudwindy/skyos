@@ -9,7 +9,7 @@ typedef struct state
   bool initialized;
   struct state_ui
   {
-    bool enable_welcome_screen;
+    bool show_welcome_screen;
     enum function
     {
       fun_home,
