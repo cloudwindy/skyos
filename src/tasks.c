@@ -24,12 +24,12 @@ void task_init(void *args __attribute__((unused)))
   os_exec("task_tick", task_tick, NULL, 0);
   os_exec("task_stayin_alive", task_stayin_alive, NULL, 1);
 
-  if (g_st.ui.welcome_screen_time > 0)
+  state_switch_function(fun_boot);
+  if (g_st.ui.extra_boot_time > 0)
   {
-    state_switch_function(fun_welcome);
-    os_delay(g_st.ui.welcome_screen_time);
-    state_switch_function(g_st.ui.fun_default);
+    os_delay(g_st.ui.extra_boot_time);
   }
+  state_switch_function(g_st.ui.fun_default);
 
   os_exit();
 }

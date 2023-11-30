@@ -2,7 +2,7 @@
 #include "tasks.h"
 #include "ui.h"
 
-void welcome_hanlder(EvType type, void *ev)
+void boot_handler(EvType type, void *ev)
 {
   if (type == ev_ui)
   {

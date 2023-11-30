@@ -18,7 +18,7 @@ void state_restore_to_defaults(void)
   g_st.fs_mode = fs_vfo;
   g_st.ui.hold_delay = 500;
   g_st.ui.fun_default = fun_home;
-  g_st.ui.welcome_screen_time = 500;
+  g_st.ui.extra_boot_time = 500;
 }
 
 void state_switch_function(Function fun)

@@ -100,9 +100,12 @@ static void home_update_ui(UI *ui)
 
 static void home_process_key(char key, KeyPress kp, uint32_t hold_time)
 {
-  (void)hold_time;
-  if (kp == kp_short_press_released && key >= '0' && key <= '9')
-  {
+  if (kp == kp_pressed)
+  { /* Ignore key press event. */
+    return;
+  }
+  if (kp == kp_short_released && key >= '0' && key <= '9')
+  { /* Edit frequency. */
     if (!editing)
     {
       editing = true;
@@ -120,17 +123,22 @@ static void home_process_key(char key, KeyPress kp, uint32_t hold_time)
   else
   {
     home_timeout();
-    switch (key)
+    if (key == 'b')
     {
-    case 'a':
-      state_switch_function(fun_settings);
-      break;
-    case 'b':
       state_freq_step_up();
-      break;
-    case 'c':
+    }
+    else if (key == 'c')
+    {
       state_freq_step_down();
-      break;
+    }
+    else if (kp == kp_long_holding && hold_time == 0)
+    { /* This is a function key. */
+      switch (key)
+      {
+      case 'a':
+        state_switch_function(fun_settings);
+        break;
+      }
     }
   }
   idle_time = 0;

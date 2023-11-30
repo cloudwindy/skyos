@@ -7,7 +7,7 @@
 typedef enum
 {
   fun_invalid,
-  fun_welcome,
+  fun_boot,
   fun_home,
   fun_fmradio,
   fun_settings,
@@ -22,7 +22,7 @@ typedef enum
 
 typedef struct
 {
-  uint16_t welcome_screen_time;
+  uint16_t extra_boot_time;
   Function fun_default;
   uint32_t hold_delay;
 } StateUI;

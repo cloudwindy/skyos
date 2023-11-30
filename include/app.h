@@ -2,6 +2,7 @@
 #define APP_H
 
 #include <stdint.h>
+
 #define APP_TICK 50
 
 typedef enum
@@ -15,9 +16,10 @@ typedef enum
 
 typedef enum
 {
-  kp_short_press_released,
-  kp_long_press_holding,
-  kp_long_press_released
+  kp_pressed,
+  kp_short_released,
+  kp_long_holding,
+  kp_long_released
 } KeyPress;
 
 typedef struct
@@ -30,7 +32,7 @@ typedef struct
 typedef void EventHandler(EvType type, void *event);
 
 EventHandler app_handler,
-             home_handler,
-             welcome_hanlder;
+             boot_handler,
+             home_handler;
 
 #endif

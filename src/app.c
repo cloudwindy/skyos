@@ -7,8 +7,8 @@ void app_handler(EvType type, void *ev)
   case fun_home:
     home_handler(type, ev);
     break;
-  case fun_welcome:
-    welcome_hanlder(type, ev);
+  case fun_boot:
+    boot_handler(type, ev);
     break;
   default:
     break;
