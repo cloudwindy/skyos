@@ -35,10 +35,11 @@ typedef struct state
   FSMode fs_mode;
 } State;
 
+extern State g_st;
 extern Function g_fun;
 
-State *state(void);
 void state_restore_to_defaults(void);
+void state_switch_function(Function fun);
 void state_freq_step_up(void);
 void state_freq_step_down(void);
 

@@ -3,11 +3,15 @@
 
 #include "ui.h"
 
+#define APP_TICK 1000
+
 typedef enum
 {
+  ev_init,
   ev_ui,
   ev_key,
   ev_tick,
+  ev_clean
 } EvType;
 
 typedef enum

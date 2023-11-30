@@ -4,7 +4,10 @@
 #include "os.h"
 
 void task_init(void *args);
-task task_ui, task_keypad, task_remote;
+Task task_ui,
+     task_keypad,
+     task_remote,
+     task_tick;
 
 #endif
 

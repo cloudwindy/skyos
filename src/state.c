@@ -1,17 +1,14 @@
 #include "state.h"
+#include "app.h"
 #include "mem.h"
-
-State g_st;
-Function g_fun = fun_invalid;
 
 /**
  * Read only.
- * You're not supposed to modify the global state returned by state().
+ * You're not supposed to modify the global state.
+ * If you need to, call state_*().
  */
-State *state(void)
-{
-  return &g_st;
-}
+State g_st;
+Function g_fun = fun_invalid;
 
 void state_restore_to_defaults(void)
 {
@@ -22,6 +19,13 @@ void state_restore_to_defaults(void)
   g_st.ui.hold_delay = 500;
   g_st.ui.fun_default = fun_home;
   g_st.ui.welcome_screen_time = 500;
+}
+
+void state_switch_function(Function fun)
+{
+  app_handler(ev_clean, NULL);
+  g_fun = fun;
+  app_handler(ev_init, NULL);
 }
 
 void state_freq_step_up(void)

@@ -6,15 +6,14 @@
 
 #include <libopencm3/stm32/iwdg.h>
 
-static task task_stayin_alive;
+static Task task_stayin_alive;
 
 void task_init(void *args __attribute__((unused)))
 {
   printf("skyOS started\n");
 
   /* TODO: implement state_load */
-  const State *st = state();
-  if (!st->initialized)
+  if (!g_st.initialized)
   {
     state_restore_to_defaults();
   }

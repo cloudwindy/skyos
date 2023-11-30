@@ -224,3 +224,4 @@ void setup_usart(void)
   usart_enable_rx_interrupt(USART1);
   usart_enable(USART1);
 }
+

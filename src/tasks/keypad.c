@@ -11,7 +11,6 @@
 /* Keypad scan routine. */
 void task_keypad(void *args __attribute__((unused)))
 {
-  const State *st = state();
   char holding_ch = '\0';
   uint32_t hold_time = 0;
   uint32_t hold_repeat_time = 0;
@@ -21,7 +20,7 @@ void task_keypad(void *args __attribute__((unused)))
     if (ch != '\0' && ch == holding_ch)
     { /* Key is held. */
       hold_time += KEYPAD_TICK;
-      if (hold_time > st->ui.hold_delay)
+      if (hold_time > g_st.ui.hold_delay)
       { /* This is a long press holding. */
         hold_repeat_time += KEYPAD_TICK;
         if (hold_repeat_time > KEYPAD_REPEAT_INTERVAL)
@@ -47,7 +46,7 @@ void task_keypad(void *args __attribute__((unused)))
         .key = holding_ch,
         .hold_time = hold_time,
       };
-      if (hold_time > st->ui.hold_delay)
+      if (hold_time > g_st.ui.hold_delay)
       { /* This was a long press. */
         ev.key_press = kp_long_press_released;
       }

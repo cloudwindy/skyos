@@ -1,4 +1,5 @@
 #include "app.h"
+#include "mem.h"
 #include "state.h"
 #include "printf.h"
 
@@ -6,17 +7,30 @@
 #include <stdint.h>
 #include <string.h>
 
+#define FREQ_STR_SIZE (16 + 1)
+#define EDIT_BUF_SIZE (9 + 1)
+
+static void home_init(void);
+static void home_clean(void);
 static void home_update_ui(UI *ui);
 static void home_process_key(char key, KeyPress kp, uint32_t hold_time);
 
-bool editing = false;
-char edit_buf[9 + 1];
-uint8_t edit_cur = 0;
+char *freq_str;
+
+bool editing;
+char *edit_buf;
+uint8_t edit_cur;
 
 void home_handler(EvType type, void *event)
 {
   switch (type)
   {
+  case ev_init:
+    home_init();
+    break;
+  case ev_clean:
+    home_clean();
+    break;
   case ev_ui:
     home_update_ui(event);
     break;
@@ -29,23 +43,35 @@ void home_handler(EvType type, void *event)
   }
 }
 
+static void home_init(void)
+{
+  editing = false;
+  freq_str = memalloc(FREQ_STR_SIZE);
+  edit_buf = memalloc(EDIT_BUF_SIZE);
+  edit_cur = 0;
+}
+
+static void home_clean(void)
+{
+  memfree(freq_str);
+  memfree(edit_buf);
+}
+
 static void home_update_ui(UI *ui)
 {
   ui_status_bar(ui);
-  char freq_str[16 + 1];
-  const State *st = state();
-  switch (st->fs_mode)
+  switch (g_st.fs_mode)
   {
   case fs_vfo:
     strcpy(freq_str, " VFO ");
     if (!editing)
     {
-      snprintf(&freq_str[5], sizeof(freq_str) - 5, "%3d.%06d",
-               st->vfo_freq / 1000000, st->vfo_freq % 1000000);
+      snprintf(&freq_str[5], FREQ_STR_SIZE - 5, "%3d.%06d",
+               g_st.vfo_freq / 1000000, g_st.vfo_freq % 1000000);
     }
     else
     {
-      snprintf(&freq_str[5], sizeof(freq_str) - 5, "%.3s.%s",
+      snprintf(&freq_str[5], FREQ_STR_SIZE - 5, "%.3s.%s",
                edit_buf, &edit_buf[3]);
     }
     break;
@@ -58,19 +84,18 @@ static void home_update_ui(UI *ui)
 
 static void home_process_key(char key, KeyPress kp, uint32_t hold_time)
 {
-  (void)kp;
   (void)hold_time;
   if (kp == kp_short_press_released && key >= '0' && key <= '9')
   {
     if (!editing)
     {
       editing = true;
-      memset(edit_buf, '-', sizeof(edit_buf));
-      edit_buf[sizeof(edit_buf) - 1] = '\0';
+      memset(edit_buf, '-', EDIT_BUF_SIZE);
+      edit_buf[EDIT_BUF_SIZE - 1] = '\0';
     }
     edit_buf[edit_cur] = key;
     edit_cur++;
-    if (edit_cur == sizeof(edit_buf) - 1)
+    if (edit_cur == EDIT_BUF_SIZE - 1)
     {
       editing = false;
       edit_cur = 0;
