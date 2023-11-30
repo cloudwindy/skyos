@@ -3,6 +3,7 @@
 #include "app.h"
 
 #include <stddef.h>
+#include <stdbool.h>
 
 void task_tick(void *args __attribute__((unused)))
 {

@@ -6,10 +6,11 @@
 
 typedef enum
 {
+  fun_invalid,
+  fun_welcome,
   fun_home,
   fun_fmradio,
   fun_settings,
-  fun_invalid
 } Function;
 
 /* Frequency Selector Mode */

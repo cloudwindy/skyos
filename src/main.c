@@ -1,4 +1,5 @@
 #include "setup.h"
+#include "os.h"
 #include "tasks.h"
 #include "printf.h"
 

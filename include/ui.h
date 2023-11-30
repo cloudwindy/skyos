@@ -18,8 +18,8 @@ void ui_text(UI *ui, uint8_t x, uint8_t y, const char *str);
 void ui_text_clear(UI *ui, uint8_t row, uint8_t col, uint8_t spaces);
 void ui_update(UI *ui);
 
-// Heavy functions
+// Heavy helper functions
 
-void ui_status_bar(UI *ui);
+void ui_time(UI *ui);
 
 #endif

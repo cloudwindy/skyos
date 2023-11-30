@@ -1,9 +1,8 @@
 #ifndef APP_H
 #define APP_H
 
-#include "ui.h"
-
-#define APP_TICK 1000
+#include <stdint.h>
+#define APP_TICK 50
 
 typedef enum
 {
@@ -28,11 +27,10 @@ typedef struct
   uint32_t hold_time;
 } EvKey;
 
-typedef UI EvUI;
-
 typedef void EventHandler(EvType type, void *event);
 
 EventHandler app_handler,
-             home_handler;
+             home_handler,
+             welcome_hanlder;
 
 #endif

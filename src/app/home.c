@@ -2,6 +2,7 @@
 #include "mem.h"
 #include "state.h"
 #include "printf.h"
+#include "ui.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -12,6 +13,7 @@
 
 static void home_init(void);
 static void home_clean(void);
+static void home_timeout(void);
 static void home_update_ui(UI *ui);
 static void home_process_key(char key, KeyPress kp, uint32_t hold_time);
 
@@ -21,25 +23,36 @@ bool editing;
 char *edit_buf;
 uint8_t edit_cur;
 
+uint16_t idle_time = 0;
+
 void home_handler(EvType type, void *event)
 {
   switch (type)
   {
+  case ev_ui:
+    home_update_ui(event);
+    break;
+  case ev_tick:
+    if (idle_time > 5000)
+    {
+      home_timeout();
+      idle_time = 0;
+    }
+    else
+    {
+      idle_time += APP_TICK;
+    }
+    break;
+  case ev_key:;
+    EvKey *evkey = event;
+    home_process_key(evkey->key, evkey->key_press, evkey->hold_time);
+    break;
   case ev_init:
     home_init();
     break;
   case ev_clean:
     home_clean();
     break;
-  case ev_ui:
-    home_update_ui(event);
-    break;
-  case ev_key:
-  {
-    EvKey *evkey = event;
-    home_process_key(evkey->key, evkey->key_press, evkey->hold_time);
-    break;
-  }
   default:
     break;
   }
@@ -61,7 +74,8 @@ static void home_clean(void)
 
 static void home_update_ui(UI *ui)
 {
-  ui_status_bar(ui);
+  ui_time(ui);
+  ui_line_break(ui, 16);
   switch (g_st.fs_mode)
   {
   case fs_vfo:
@@ -105,8 +119,12 @@ static void home_process_key(char key, KeyPress kp, uint32_t hold_time)
   }
   else
   {
+    home_timeout();
     switch (key)
     {
+    case 'a':
+      state_switch_function(fun_settings);
+      break;
     case 'b':
       state_freq_step_up();
       break;
@@ -115,4 +133,12 @@ static void home_process_key(char key, KeyPress kp, uint32_t hold_time)
       break;
     }
   }
+  idle_time = 0;
 }
+
+static void home_timeout(void)
+{
+  editing = false;
+  edit_cur = 0;
+}
+

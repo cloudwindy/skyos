@@ -1,12 +1,11 @@
 #include "tasks.h"
 
+#include "os.h"
 #include "app.h"
 #include "state.h"
 #include "keypad.h"
 #include "printf.h"
 
-#define KEYPAD_TICK 10
-#define KEYPAD_REPEAT_INTERVAL 100
 
 /* Keypad scan routine. */
 void task_keypad(void *args __attribute__((unused)))

@@ -41,13 +41,11 @@ void ui_update(UI *ui)
   ssd1306_update(ui->vbuf);
 }
 
-void ui_status_bar(UI *ui)
+void ui_time(UI *ui)
 {
   static time_t rawtime;
   static struct tm info;
   static char timetext[9] = {0};
-  ui_line_break(ui, 16);
-  /* Update time. */
   rawtime = rtc_get_counter_val();
   gmtime_r(&rawtime, &info);
   snprintf(timetext, sizeof(timetext), "%02d:%02d %s",

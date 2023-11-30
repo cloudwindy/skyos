@@ -1,5 +1,6 @@
 #include "tasks.h"
 
+#include "os.h"
 #include "mem.h"
 #include "led.h"
 #include "remote.h"
