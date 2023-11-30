@@ -6,7 +6,6 @@
 #include "keypad.h"
 #include "printf.h"
 
-
 /* Keypad scan routine. */
 void task_keypad(void *args __attribute__((unused)))
 {

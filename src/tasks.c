@@ -6,8 +6,6 @@
 
 #include <libopencm3/stm32/iwdg.h>
 
-static Task task_stayin_alive;
-
 void task_init(void *args __attribute__((unused)))
 {
   printf("skyOS started\n");
@@ -18,11 +16,11 @@ void task_init(void *args __attribute__((unused)))
     state_restore_to_defaults();
   }
 
-  os_exec("task_ui", task_ui, NULL, 0);
-  os_exec("task_keypad", task_keypad, NULL, 0);
-  os_exec("task_remote", task_remote, NULL, 0);
-  os_exec("task_tick", task_tick, NULL, 0);
-  os_exec("task_stayin_alive", task_stayin_alive, NULL, 1);
+  os_exec("ui", task_ui, NULL, 0);
+  os_exec("keypad", task_keypad, NULL, 0);
+  os_exec("remote", task_remote, NULL, 0);
+  os_exec("tick", task_tick, NULL, 0);
+  os_exec("watchdog", task_watchdog, NULL, 1);
 
   state_switch_function(fun_boot);
   if (g_st.ui.extra_boot_time > 0)
@@ -34,11 +32,3 @@ void task_init(void *args __attribute__((unused)))
   os_exit();
 }
 
-static void task_stayin_alive(void *args __attribute__((unused)))
-{
-  while (true)
-  { /* Life goin' nowhere, somebody help me. */
-    iwdg_reset();
-    os_delay(50);
-  }
-}

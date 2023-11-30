@@ -11,11 +11,10 @@ int main(void)
    * This task won't not run immediately because RTOS
    * isn't started yet.
   */
-  os_exec("task_init", task_init, NULL, 0);
+  os_exec("task", task_init, NULL, 0);
   /**
    * Start up RTOS.
-   *
-   * It will configure the SysTick by itself.
+   * It does the SysTick configuring by itself.
    */
   os_start();
   printf("os shut down.\n");

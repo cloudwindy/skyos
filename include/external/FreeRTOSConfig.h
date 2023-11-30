@@ -8,12 +8,13 @@ your application. */
 #define xPortPendSVHandler pend_sv_handler
 #define xPortSysTickHandler sys_tick_handler
 
+#define configUSE_TICKLESS_IDLE 1
 #define configUSE_PREEMPTION 1
 #define configUSE_IDLE_HOOK 0
 #define configUSE_TICK_HOOK 0
 #define configCPU_CLOCK_HZ ((unsigned long)72000000)
 #define configSYSTICK_CLOCK_HZ (configCPU_CLOCK_HZ / 8) /* vTaskDelay() fix */
-#define configTICK_RATE_HZ ((TickType_t)250)
+#define configTICK_RATE_HZ ((TickType_t)100)
 #define configMAX_PRIORITIES (5)
 #define configMINIMAL_STACK_SIZE ((unsigned short)128)
 #define configTOTAL_HEAP_SIZE ((size_t)(8 * 1024))

@@ -6,8 +6,6 @@
 #include "ui.h"
 #include "state.h"
 
-#define UI_TICK 50
-
 void task_ui(void *args __attribute__((unused)))
 {
   UI *ui = memalloc(sizeof(UI));

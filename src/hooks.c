@@ -1,6 +1,10 @@
 #include "tty.h"
 #include "serial.h"
 
+/**
+ * Only #include "FreeRTOS.h" in hooks.c and os.c,
+ * and nowhere else.
+ */
 #include "FreeRTOS.h"
 #include "FreeRTOS/task.h"
 
