@@ -74,3 +74,4 @@ void usage_fault_handler(void)
   for (;;)
     ;
 }
+

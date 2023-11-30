@@ -29,10 +29,12 @@ typedef struct
   uint32_t hold_time;
 } EvKey;
 
-typedef void EventHandler(EvType type, void *event);
+typedef void EvHandler(EvType type, void *event);
 
-EventHandler app_handler,
-             boot_handler,
-             home_handler;
+EvHandler app_handler,
+          boot_handler,
+          home_handler,
+          fmradio_handler,
+          settings_handler;
 
 #endif

@@ -11,11 +11,11 @@
 #define FREQ_STR_SIZE (16 + 1)
 #define EDIT_BUF_SIZE (9 + 1)
 
-static void home_init(void);
-static void home_clean(void);
-static void home_timeout(void);
-static void home_update_ui(UI *ui);
-static void home_process_key(char key, KeyPress kp, uint32_t hold_time);
+static void init(void);
+static void clean(void);
+static void timeout(void);
+static void update_ui(UI *ui);
+static void process_key(char key, KeyPress kp, uint32_t hold_time);
 
 char *freq_str;
 
@@ -30,12 +30,12 @@ void home_handler(EvType type, void *event)
   switch (type)
   {
   case ev_ui:
-    home_update_ui(event);
+    update_ui(event);
     break;
   case ev_tick:
     if (idle_time > 5000)
     {
-      home_timeout();
+      timeout();
       idle_time = 0;
     }
     else
@@ -45,20 +45,20 @@ void home_handler(EvType type, void *event)
     break;
   case ev_key:;
     EvKey *evkey = event;
-    home_process_key(evkey->key, evkey->key_press, evkey->hold_time);
+    process_key(evkey->key, evkey->key_press, evkey->hold_time);
     break;
   case ev_init:
-    home_init();
+    init();
     break;
   case ev_clean:
-    home_clean();
+    clean();
     break;
   default:
     break;
   }
 }
 
-static void home_init(void)
+static void init(void)
 {
   editing = false;
   freq_str = memalloc(FREQ_STR_SIZE);
@@ -66,13 +66,13 @@ static void home_init(void)
   edit_cur = 0;
 }
 
-static void home_clean(void)
+static void clean(void)
 {
   memfree(freq_str);
   memfree(edit_buf);
 }
 
-static void home_update_ui(UI *ui)
+static void update_ui(UI *ui)
 {
   ui_time(ui);
   ui_line_break(ui, 16);
@@ -98,7 +98,7 @@ static void home_update_ui(UI *ui)
   ui_text(ui, 0, 2, freq_str);
 }
 
-static void home_process_key(char key, KeyPress kp, uint32_t hold_time)
+static void process_key(char key, KeyPress kp, uint32_t hold_time)
 {
   if (kp == kp_pressed)
   { /* Ignore key press event. */
@@ -122,7 +122,7 @@ static void home_process_key(char key, KeyPress kp, uint32_t hold_time)
   }
   else
   {
-    home_timeout();
+    timeout();
     if (key == 'b')
     {
       state_freq_step_up();
@@ -144,7 +144,7 @@ static void home_process_key(char key, KeyPress kp, uint32_t hold_time)
   idle_time = 0;
 }
 
-static void home_timeout(void)
+static void timeout(void)
 {
   editing = false;
   edit_cur = 0;
