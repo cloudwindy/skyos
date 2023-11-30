@@ -7,6 +7,7 @@ typedef enum
 {
   ev_ui,
   ev_key,
+  ev_tick,
 } EvType;
 
 typedef enum

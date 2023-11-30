@@ -2,7 +2,7 @@
 #include "mem.h"
 
 State g_st;
-enum function g_fun = fun_invalid;
+Function g_fun = fun_invalid;
 
 /**
  * Read only.
@@ -21,7 +21,7 @@ void state_restore_to_defaults(void)
   g_st.fs_mode = fs_vfo;
   g_st.ui.hold_delay = 500;
   g_st.ui.fun_default = fun_home;
-  g_st.ui.show_welcome_screen = true;
+  g_st.ui.welcome_screen_time = 500;
 }
 
 void state_freq_step_up(void)

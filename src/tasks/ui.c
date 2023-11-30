@@ -9,14 +9,14 @@ void task_ui(void *args __attribute__((unused)))
 {
   UI *ui = memalloc(sizeof(UI));
   ui_init(ui);
-  State *st = state();
-  if (st->ui.show_welcome_screen)
+  const State *st = state();
+  if (st->ui.welcome_screen_time > 0)
   {
     /* Welcome screen. */
     ui_text(ui, 0, 0, "skyOS");
     ui_line_break(ui, 16);
     ui_update(ui);
-    os_delay(1000);
+    os_delay(st->ui.welcome_screen_time);
   }
   g_fun = st->ui.fun_default;
 

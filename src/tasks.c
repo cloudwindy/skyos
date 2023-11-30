@@ -13,7 +13,7 @@ void task_init(void *args __attribute__((unused)))
   printf("skyOS started\n");
 
   /* TODO: implement state_load */
-  State *st = state();
+  const State *st = state();
   if (!st->initialized)
   {
     state_restore_to_defaults();

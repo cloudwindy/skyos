@@ -11,63 +11,51 @@
 /* Keypad scan routine. */
 void task_keypad(void *args __attribute__((unused)))
 {
-  State *st = state();
+  const State *st = state();
   char holding_ch = '\0';
   uint32_t hold_time = 0;
   uint32_t hold_repeat_time = 0;
   while (true)
   {
     char ch = keypad_getchar();
-    if (ch != '\0')
-    { /* Key is pressed. */
-      if (ch == holding_ch)
-      { /* Key is being hold. */
-        hold_time += KEYPAD_TICK;
-        if (hold_time > st->ui.hold_delay)
-        { /* This is a long press holding. */
-          hold_repeat_time += KEYPAD_TICK;
-          if (hold_repeat_time > KEYPAD_REPEAT_INTERVAL)
-          {
-            EvKey event = {
-              .key = ch,
-              .key_press = kp_long_press_holding,
-              .hold_time = hold_time,
-            };
-            app_handler(ev_key, &event);
-            hold_repeat_time = 0;
-          }
+    if (ch != '\0' && ch == holding_ch)
+    { /* Key is held. */
+      hold_time += KEYPAD_TICK;
+      if (hold_time > st->ui.hold_delay)
+      { /* This is a long press holding. */
+        hold_repeat_time += KEYPAD_TICK;
+        if (hold_repeat_time > KEYPAD_REPEAT_INTERVAL)
+        {
+          EvKey ev = {
+            .key = ch,
+            .key_press = kp_long_press_holding,
+            .hold_time = hold_time,
+          };
+          app_handler(ev_key, &ev);
+          hold_repeat_time = 0;
         }
       }
-      else
-      { /**
-         * Key changes during pressing.
-         * This is perhaps an error, so we're going to ignore it.
-         */
-        holding_ch = ch;
-        hold_time = 0;
-        hold_repeat_time = 0;
-      }
     }
-    else
-    { /* Key is not pressed. */
+    else if (ch != '\0')
+    { /* A new key is pressed. */
+      holding_ch = ch;
+      hold_time += KEYPAD_TICK;
+    }
+    else if (hold_time > 0)
+    { /* Key is released. */
+      EvKey ev = {
+        .key = holding_ch,
+        .hold_time = hold_time,
+      };
       if (hold_time > st->ui.hold_delay)
-      { /* This is a long press released. */
-        EvKey event = {
-          .key = ch,
-          .key_press = kp_long_press_released,
-          .hold_time = hold_time,
-        };
-        app_handler(ev_key, &event);
+      { /* This was a long press. */
+        ev.key_press = kp_long_press_released;
       }
-      else if (hold_time > 0)
-      { /* This is a short press released. */
-        EvKey event = {
-          .key = ch,
-          .key_press = kp_short_press_released,
-          .hold_time = hold_time,
-        };
-        app_handler(ev_key, &event);
+      else
+      { /* This was a short press. */
+        ev.key_press = kp_short_press_released;
       }
+      app_handler(ev_key, &ev);
       holding_ch = '\0';
       hold_time = 0;
       hold_repeat_time = 0;
