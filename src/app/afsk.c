@@ -1,18 +1,18 @@
 #include "afsk.h"
 #include "delay.h"
-#include "pwm.h"
 #include "printf.h"
+#include "pwm.h"
 
 #include <libopencm3/stm32/gpio.h>
 
 void test_tx(void)
 {
   PwmGenerator gen = {
-      .gpio_port = GPIOB,
-      .gpios = GPIO1,
-      .low_freq = 1200,
-      .high_freq = 2200,
-      .default_cycle = .5,
+    .gpio_port = GPIOB,
+    .gpios = GPIO1,
+    .low_freq = 1200,
+    .high_freq = 2200,
+    .default_cycle = .5,
   };
   pwm_init(&gen);
 

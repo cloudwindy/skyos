@@ -15,7 +15,8 @@ void pwm_init(const PwmGenerator *pwm_gen)
 /**
  * Send one byte.
  */
-void pwm_send(const PwmGenerator *pwm_gen, uint8_t byte, uint32_t length_of_bit, uint32_t length_between_bit)
+void pwm_send(const PwmGenerator *pwm_gen, uint8_t byte, uint32_t length_of_bit,
+              uint32_t length_between_bit)
 {
   for (int i = 0; i < 8; i++)
   {
@@ -33,11 +34,12 @@ void pwm_send(const PwmGenerator *pwm_gen, uint8_t byte, uint32_t length_of_bit,
  * length Total length in Microseconds
  * cycle  0 ~ 255
  */
-void pwm_gen_rt(const PwmGenerator *pwm_gen, uint32_t freq, uint32_t length, uint8_t cycle)
+void pwm_gen_rt(const PwmGenerator *pwm_gen, uint32_t freq, uint32_t length,
+                uint8_t cycle)
 {
   if (cycle == 0)
     cycle = pwm_gen->default_cycle;
-  
+
   uint32_t period_full = 1000000 / freq;
   uint16_t period_on = period_full * ((uint16_t)cycle / 256);
   uint16_t period_off = period_full * ((256 - (uint16_t)cycle) / 256);

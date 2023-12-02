@@ -1,8 +1,8 @@
-#include "app.h"
 #include "tasks.h"
-#include "state.h"
+#include "app.h"
 #include "os.h"
 #include "printf.h"
+#include "state.h"
 
 #include <libopencm3/stm32/iwdg.h>
 
@@ -31,4 +31,3 @@ void task_init(void *args __attribute__((unused)))
 
   os_exit();
 }
-

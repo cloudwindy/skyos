@@ -1,10 +1,10 @@
 #include "tasks.h"
 
-#include "os.h"
 #include "app.h"
 #include "mem.h"
-#include "ui.h"
+#include "os.h"
 #include "state.h"
+#include "ui.h"
 
 void task_ui(void *args __attribute__((unused)))
 {

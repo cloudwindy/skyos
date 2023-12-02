@@ -1,9 +1,9 @@
-#include "tty.h" 
+#include "tty.h"
 
 #ifdef ENABLE_TTY
 
-#include "ssd1306.h"
 #include "canvas.h"
+#include "ssd1306.h"
 
 #define TTY_FONT (Font)
 
@@ -41,10 +41,7 @@ void tty_print(char *str, int len)
 /**
  * 刷新虚拟终端
  */
-void tty_update(void)
-{
-  ssd1306_update(canvas.buf);
-}
+void tty_update(void) { ssd1306_update(canvas.buf); }
 
 /**
  * 清空虚拟终端
@@ -110,7 +107,5 @@ static void tty_new_line(void)
   tty_return();
 }
 #else
-void setup_tty(void)
-{
-}
+void setup_tty(void) {}
 #endif

@@ -26,4 +26,3 @@ void kbd_confirm(Keyboard *kbd);
 void kbd_read(Keyboard *kbd, char *buf);
 
 #endif
-

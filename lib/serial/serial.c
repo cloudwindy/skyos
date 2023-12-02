@@ -1,8 +1,8 @@
 #include "serial.h"
 #include "ring.h"
 
-#include <string.h>
 #include <libopencm3/stm32/usart.h>
+#include <string.h>
 
 #define SERIAL_PORT (USART1)
 
@@ -10,10 +10,7 @@ uint8_t txbuf[SERIAL_TX_BUFFER_SIZE];
 uint8_t rxbuf[SERIAL_RX_BUFFER_SIZE];
 size_t rxcur;
 Ring ring = {
-    .data = txbuf,
-    .size = SERIAL_TX_BUFFER_SIZE,
-    .begin = 0,
-    .end = 0};
+  .data = txbuf, .size = SERIAL_TX_BUFFER_SIZE, .begin = 0, .end = 0};
 
 /**
  * Non-blocking serial recieve.
@@ -46,10 +43,7 @@ int serial_recv(char *buf, size_t len)
 /**
  * Get receive buffer fullness.
  */
-size_t serial_recvlen(void)
-{
-  return rxcur;
-}
+size_t serial_recvlen(void) { return rxcur; }
 
 /**
  * Non-blocking serial send.

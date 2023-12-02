@@ -28,14 +28,10 @@ void state_switch_function(Function fun)
   app_handler(ev_init, NULL);
 }
 
-void state_freq_step_up(void)
-{
-  g_st.vfo_freq += g_st.freq_step;
-}
+void state_freq_step_up(void) { g_st.vfo_freq += g_st.freq_step; }
 
 void state_freq_step_down(void)
 {
   if (g_st.vfo_freq > g_st.freq_step)
     g_st.vfo_freq -= g_st.freq_step;
 }
-

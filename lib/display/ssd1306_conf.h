@@ -6,8 +6,8 @@
 #ifndef SSD1306_CONF_H
 #define SSD1306_CONF_H
 
-#include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/spi.h>
 
 // Mirror the screen if needed
 // #define SSD1306_MIRROR_VERT

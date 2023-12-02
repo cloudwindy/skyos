@@ -7,27 +7,22 @@
 /**
  * Wrapper of FreeRTOS vTaskStartScheduler.
  */
-void os_start(void)
-{
-  vTaskStartScheduler();
-}
+void os_start(void) { vTaskStartScheduler(); }
 
 /**
  * Wrapper for vTaskDelay.
  *
  * Do not use this in setup functions.
  */
-void os_delay(uint32_t ms)
-{
-  vTaskDelay(pdMS_TO_TICKS(ms));
-}
+void os_delay(uint32_t ms) { vTaskDelay(pdMS_TO_TICKS(ms)); }
 
 /**
  * Wrapper of FreeRTOS xTaskCreate.
  *
  * Priority defaults to 2 if zero is given.
  */
-void os_exec(const char *name, void (*task_p)(void *), void *const args, uint32_t priority)
+void os_exec(const char *name, void (*task_p)(void *), void *const args,
+             uint32_t priority)
 {
   if (priority == 0)
   {
@@ -44,23 +39,14 @@ void os_exec(const char *name, void (*task_p)(void *), void *const args, uint32_
 /**
  * Wrapper of FreeRTOS vTaskDelete.
  */
-void os_exit(void)
-{
-  vTaskDelete(NULL);
-}
+void os_exit(void) { vTaskDelete(NULL); }
 
 /**
  * Wrapper of FreeRTOS vPortEnterCritical.
  */
-void os_mutex_lock(void)
-{
-  vPortEnterCritical();
-}
+void os_mutex_lock(void) { vPortEnterCritical(); }
 
 /**
  * Wrapper of FreeRTOS vPortExitCritical.
  */
-void os_mutex_unlock(void)
-{
-  vPortExitCritical();
-}
+void os_mutex_unlock(void) { vPortExitCritical(); }

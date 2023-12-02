@@ -1,18 +1,18 @@
 #include "setup.h"
-#include "led.h"
 #include "delay.h"
+#include "led.h"
 #include "ssd1306.h"
 #include "ssd1306_conf.h"
 #include "tty.h"
 
 #include <libopencm3/cm3/nvic.h>
+#include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/i2c.h>
 #include <libopencm3/stm32/iwdg.h>
 #include <libopencm3/stm32/rcc.h>
-#include <libopencm3/stm32/gpio.h>
-#include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/rtc.h>
 #include <libopencm3/stm32/spi.h>
-#include <libopencm3/stm32/i2c.h>
+#include <libopencm3/stm32/timer.h>
 #include <libopencm3/stm32/usart.h>
 
 #define E6 (1'000'000)
@@ -67,10 +67,7 @@ static void setup_iwdg(void)
  * Frequency  72 MHz
  * Period     14 ns
  */
-static void setup_rcc(void)
-{
-  rcc_clock_setup_in_hse_8mhz_out_72mhz();
-}
+static void setup_rcc(void) { rcc_clock_setup_in_hse_8mhz_out_72mhz(); }
 
 /**
  * TIM Timer Setup
@@ -85,8 +82,7 @@ static void setup_timer(void)
   rcc_periph_clock_enable(RCC_TIM3);
   rcc_periph_reset_pulse(RST_TIM3);
 
-  timer_set_mode(TIM3, TIM_CR1_CKD_CK_INT,
-                 TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
+  timer_set_mode(TIM3, TIM_CR1_CKD_CK_INT, TIM_CR1_CMS_EDGE, TIM_CR1_DIR_UP);
   timer_set_prescaler(TIM3, rcc_ahb_frequency / E6 - 1);
   timer_disable_preload(TIM3);
   timer_continuous_mode(TIM3);
@@ -102,10 +98,7 @@ static void setup_timer(void)
  * Frequency 1 Hz
  * Period    1 s
  */
-static void setup_rtc(void)
-{
-  rtc_auto_awake(RCC_LSE, 0x7FFF);
-}
+static void setup_rtc(void) { rtc_auto_awake(RCC_LSE, 0x7FFF); }
 
 /**
  * GPIO Ports Setup
@@ -122,16 +115,15 @@ static void setup_gpio(void)
   rcc_periph_clock_enable(RCC_GPIOB);
   rcc_periph_clock_enable(RCC_GPIOC);
 
-  gpio_set_mode(GPIOA, GPIO_MODE_INPUT,
-                GPIO_CNF_INPUT_ANALOG, GPIO_ALL);
-  gpio_set_mode(GPIOB, GPIO_MODE_INPUT,
-                GPIO_CNF_INPUT_ANALOG, GPIO_ALL);
+  gpio_set_mode(GPIOA, GPIO_MODE_INPUT, GPIO_CNF_INPUT_ANALOG, GPIO_ALL);
+  gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_INPUT_ANALOG, GPIO_ALL);
 
-  gpio_set_mode(LED_BANK, GPIO_MODE_OUTPUT_2_MHZ,
-                GPIO_CNF_OUTPUT_OPENDRAIN, LED);
+  gpio_set_mode(LED_BANK, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_OPENDRAIN,
+                LED);
 
   gpio_set_mode(GPIO_BANK_SPI1_SCK, GPIO_MODE_OUTPUT_50_MHZ,
-                GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_SPI1_SCK | GPIO_SPI1_MOSI | GPIO_SPI1_MISO);
+                GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
+                GPIO_SPI1_SCK | GPIO_SPI1_MOSI | GPIO_SPI1_MISO);
 
   gpio_set_mode(GPIO_BANK_I2C1_SCL, GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN, GPIO_I2C1_SCL | GPIO_I2C1_SDA);
@@ -143,10 +135,10 @@ static void setup_gpio(void)
   gpio_set_mode(SSD1306_BANK_CS, GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_CS);
 
-  gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ,
-                GPIO_CNF_OUTPUT_PUSHPULL, GPIO0 | GPIO1 | GPIO2 | GPIO3);
-  gpio_set_mode(GPIOB, GPIO_MODE_INPUT,
-                GPIO_CNF_INPUT_PULL_UPDOWN, GPIO6 | GPIO7 | GPIO8 | GPIO9);
+  gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL,
+                GPIO0 | GPIO1 | GPIO2 | GPIO3);
+  gpio_set_mode(GPIOB, GPIO_MODE_INPUT, GPIO_CNF_INPUT_PULL_UPDOWN,
+                GPIO6 | GPIO7 | GPIO8 | GPIO9);
 }
 
 /**
@@ -164,10 +156,9 @@ static void setup_spi(void)
   rcc_periph_clock_enable(RCC_SPI1);
   rcc_periph_reset_pulse(RST_SPI1);
 
-  spi_init_master(SPI1, SPI_CR1_BAUDRATE_FPCLK_DIV_4,
-                  SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE,
-                  SPI_CR1_CPHA_CLK_TRANSITION_1, SPI_CR1_DFF_8BIT,
-                  SPI_CR1_MSBFIRST);
+  spi_init_master(
+    SPI1, SPI_CR1_BAUDRATE_FPCLK_DIV_4, SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE,
+    SPI_CR1_CPHA_CLK_TRANSITION_1, SPI_CR1_DFF_8BIT, SPI_CR1_MSBFIRST);
   spi_set_full_duplex_mode(SPI1);
 
   /* This is necessary to manage Chip Select signal by ourself. */
@@ -224,4 +215,3 @@ void setup_usart(void)
   usart_enable_rx_interrupt(USART1);
   usart_enable(USART1);
 }
-

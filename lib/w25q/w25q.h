@@ -1,8 +1,8 @@
 #ifndef W25Q_H
 #define W25Q_H
 
-#include <libopencm3/stm32/spi.h>
 #include <libopencm3/stm32/gpio.h>
+#include <libopencm3/stm32/spi.h>
 #include <stddef.h>
 
 #define W25Q_SPI SPI1

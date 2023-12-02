@@ -6,34 +6,24 @@
 /**
  * Wrapper of FreeRTOS pvPortMalloc.
  */
-void *memalloc(size_t size)
-{
-  return pvPortMalloc(size);
-}
+void *memalloc(size_t size) { return pvPortMalloc(size); }
 
 /**
  * Wrapper of FreeRTOS pvPortCalloc.
-*/
-void *memcalloc(size_t num, size_t size)
-{
-  return pvPortCalloc(num, size);
-}
+ */
+void *memcalloc(size_t num, size_t size) { return pvPortCalloc(num, size); }
 
 /**
  * Wrapper of FreeRTOS vPortFree.
  */
-void memfree(void *ptr)
-{
-  vPortFree(ptr);
-}
+void memfree(void *ptr) { vPortFree(ptr); }
 
 /**
  * Wrapper of FreeRTOS xPortGetFreeHeapSize.
  */
 MemInfo meminfo(void)
 {
-  MemInfo info = {
-      .total = configTOTAL_HEAP_SIZE,
-      .free = xPortGetFreeHeapSize()};
+  MemInfo info = {.total = configTOTAL_HEAP_SIZE,
+                  .free = xPortGetFreeHeapSize()};
   return info;
 }

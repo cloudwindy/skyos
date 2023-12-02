@@ -1,5 +1,5 @@
-#include "tty.h"
 #include "serial.h"
+#include "tty.h"
 
 /**
  * Only #include "FreeRTOS.h" in hooks.c and os.c,
@@ -11,20 +11,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <libopencm3/stm32/rtc.h>
 #include <libopencm3/cm3/nvic.h>
+#include <libopencm3/stm32/rtc.h>
 
 #ifndef ENANLE_SERIAL_PRINTF
 #include "printf.h"
 #include "serial.h"
-void _putchar(char ch)
-{
-  serial_send(&ch, 1);
-}
+void _putchar(char ch) { serial_send(&ch, 1); }
 #endif
 
 #if (configCHECK_FOR_STACK_OVERFLOW == 1)
-void vApplicationStackOverflowHook(TaskHandle_t task __attribute__((unused)), char *task_name)
+void vApplicationStackOverflowHook(TaskHandle_t task __attribute__((unused)),
+                                   char *task_name)
 {
   printf("%s: stack overflow\n", task_name);
   /* Wait for IWDG reset. */
@@ -46,10 +44,7 @@ void vApplicationMallocFailedHook(void)
 /**
  * USART 端口数据中断
  */
-void usart1_isr(void)
-{
-  serial_handler();
-}
+void usart1_isr(void) { serial_handler(); }
 
 void hard_fault_handler(void)
 {
@@ -74,4 +69,3 @@ void usage_fault_handler(void)
   for (;;)
     ;
 }
-

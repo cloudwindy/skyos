@@ -1,10 +1,10 @@
 #include "tasks.h"
 
-#include "os.h"
 #include "app.h"
-#include "state.h"
 #include "keypad.h"
+#include "os.h"
 #include "printf.h"
+#include "state.h"
 
 /* Keypad scan routine. */
 void task_keypad(void *args __attribute__((unused)))
@@ -17,10 +17,12 @@ void task_keypad(void *args __attribute__((unused)))
   {
     char key = keypad_getchar();
     if (key != '\0' && key == holding_key)
-    { /* Key is held. */
+    {
+      /* Key is held. */
       hold_time += KEYPAD_TICK;
       if (hold_time > g_st.ui.hold_delay)
-      { /* This is a long press holding. */
+      {
+        /* This is a long press holding. */
         hold_repeat_time += KEYPAD_TICK;
         if (hold_repeat_time > KEYPAD_REPEAT_INTERVAL)
         {
@@ -36,7 +38,8 @@ void task_keypad(void *args __attribute__((unused)))
       }
     }
     else if (key != '\0')
-    { /* A new key is pressed. */
+    {
+      /* A new key is pressed. */
       EvKey ev = {
         .key = key,
         .key_press = kp_pressed,
@@ -52,17 +55,20 @@ void task_keypad(void *args __attribute__((unused)))
       hold_time = 0;
     }
     else if (hold_time > 0)
-    { /* Key is released. */
+    {
+      /* Key is released. */
       EvKey ev = {
         .key = holding_key,
         .hold_time = 0,
       };
       if (hold_time > g_st.ui.hold_delay)
-      { /* This was a long press. */
+      {
+        /* This was a long press. */
         ev.key_press = kp_long_released;
       }
       else
-      { /* This was a short press. */
+      {
+        /* This was a short press. */
         ev.key_press = kp_short_released;
       }
       app_handler(ev_key, &ev);

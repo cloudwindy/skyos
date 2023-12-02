@@ -1,6 +1,7 @@
 /**
  * This Library was originally written by Olivier Van den Eede (4ilo) in 2016.
- * Some refactoring was done and SPI support was added by Aleksander Alekseev (afiskon) in 2018.
+ * Some refactoring was done and SPI support was added by Aleksander Alekseev
+ * (afiskon) in 2018.
  *
  * https://github.com/afiskon/stm32-ssd1306
  */
@@ -8,8 +9,8 @@
 #ifndef SSD1306_H
 #define SSD1306_H
 
-#include <stdint.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 // SSD1306 OLED height in pixels
 #ifndef SSD1306_HEIGHT

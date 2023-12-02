@@ -1,9 +1,9 @@
 /* Copyright (c) Microsoft Corporation.
    Licensed under the MIT License. */
 
+#include <errno.h>
 #include <stdint.h>
 #include <stdio.h>
-#include <errno.h>
 #include <sys/stat.h>
 
 int _end;
@@ -27,20 +27,11 @@ void *_sbrk(int incr)
   return prev_heap;
 }
 
-int _write(int file, void *buf, size_t count)
-{
-  return -1;
-}
+int _write(int file, void *buf, size_t count) { return -1; }
 
-int _read(int file, void *buf, size_t count)
-{
-  return -1;
-}
+int _read(int file, void *buf, size_t count) { return -1; }
 
-int _close(int file)
-{
-  return -1;
-}
+int _close(int file) { return -1; }
 
 int _fstat(int file, struct stat *st)
 {
@@ -48,15 +39,9 @@ int _fstat(int file, struct stat *st)
   return 0;
 }
 
-int _isatty(int file)
-{
-  return 1;
-}
+int _isatty(int file) { return 1; }
 
-int _lseek(int file, int ptr, int dir)
-{
-  return 0;
-}
+int _lseek(int file, int ptr, int dir) { return 0; }
 
 void _exit(int status)
 {
@@ -65,15 +50,9 @@ void _exit(int status)
     ;
 }
 
-void _kill(int pid, int sig)
-{
-  return;
-}
+void _kill(int pid, int sig) { return; }
 
-int _getpid(void)
-{
-  return -1;
-}
+int _getpid(void) { return -1; }
 
 // function aliases to support different runtimes
 int lseek(int file, int ptr, int dir) __attribute__((weak, alias("_lseek")));
@@ -82,4 +61,3 @@ int close(int file) __attribute__((weak, alias("_close")));
 int isatty(int file) __attribute__((weak, alias("_isatty")));
 int getpid(void) __attribute__((weak, alias("_getpid")));
 void kill(int pid, int sig) __attribute__((weak, alias("_kill")));
-

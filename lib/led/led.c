@@ -15,15 +15,9 @@ void led_blink(void)
   os_delay(LED_DELAY);
 }
 
-void led_on(void)
-{
-  gpio_clear(LED_BANK, LED);
-}
+void led_on(void) { gpio_clear(LED_BANK, LED); }
 
-void led_off(void)
-{
-  gpio_set(LED_BANK, LED);
-}
+void led_off(void) { gpio_set(LED_BANK, LED); }
 
 void led_pwm_dimming(int brightness)
 {

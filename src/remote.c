@@ -2,12 +2,12 @@
 #include "mem.h"
 #include "printf.h"
 
+#include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
-#include <inttypes.h>
 
-#include <libopencm3/stm32/rtc.h>
 #include <libopencm3/cm3/scb.h>
+#include <libopencm3/stm32/rtc.h>
 
 typedef int(ComponentHandler)(char *resp, int argc, char **argv);
 
@@ -17,16 +17,12 @@ typedef struct command
   ComponentHandler *handler;
 } Component;
 
-static ComponentHandler
-    com_time,
-    com_sys;
+static ComponentHandler com_time, com_sys;
 
 static void error_arg(char *target, int expected, int got);
 static void error_action(char *target, char *action);
 
-Component cmd_list[] = {
-    {"time", com_time},
-    {"sys", com_sys}};
+Component cmd_list[] = {{"time", com_time}, {"sys", com_sys}};
 
 int remote_exec(char *resp, char *stmt, size_t len)
 {
@@ -119,7 +115,8 @@ static int com_sys(char *resp, int argc, char *argv[])
 
 static void error_arg(char *target, int expected, int got)
 {
-  sprintf(target, "not enough arguments (expected %d, got %d)\n", expected, got);
+  sprintf(target, "not enough arguments (expected %d, got %d)\n", expected,
+          got);
 }
 
 static void error_action(char *target, char *action)

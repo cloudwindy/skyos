@@ -1,6 +1,6 @@
 #include "canvas.h"
-#include <stdlib.h>
 #include <math.h>
+#include <stdlib.h>
 
 #define CIRCLE_APPROXIMATION_SEGMENTS (36)
 
@@ -57,7 +57,8 @@ void canvas_set_pix(Canvas *canvas, uint8_t x, uint8_t y, Color color)
 
 Color canvas_get_pix(Canvas *canvas, uint8_t x, uint8_t y)
 {
-  return (canvas->buf[x + (y / 8) * canvas->width] & (1 << (y % 8))) ? White : Black;
+  return (canvas->buf[x + (y / 8) * canvas->width] & (1 << (y % 8))) ? White
+                                                                     : Black;
 }
 
 void canvas_move_up(Canvas *canvas, uint8_t height)
@@ -84,7 +85,8 @@ void canvas_move_up(Canvas *canvas, uint8_t height)
  * color     => Black or White
  * overwrite => Overwrite existing character
  */
-char canvas_write_char(Canvas *canvas, char ch, FontDef font, Color color, bool overwrite)
+char canvas_write_char(Canvas *canvas, char ch, FontDef font, Color color,
+                       bool overwrite)
 {
   uint32_t i, b, j;
 
@@ -108,13 +110,13 @@ char canvas_write_char(Canvas *canvas, char ch, FontDef font, Color color, bool 
     {
       if ((b << j) & 0x0800)
       {
-        canvas_set_pix(canvas, canvas->cur_x + j,
-                       canvas->cur_y + i, (Color)color);
+        canvas_set_pix(canvas, canvas->cur_x + j, canvas->cur_y + i,
+                       (Color)color);
       }
       else if (overwrite)
       {
-        canvas_set_pix(canvas, canvas->cur_x + j,
-                       canvas->cur_y + i, (Color)!color);
+        canvas_set_pix(canvas, canvas->cur_x + j, canvas->cur_y + i,
+                       (Color)!color);
       }
     }
   }
@@ -127,7 +129,8 @@ char canvas_write_char(Canvas *canvas, char ch, FontDef font, Color color, bool 
 }
 
 /* Write full string to screenbuffer */
-char canvas_write_string(Canvas *canvas, const char *str, FontDef font, Color color, bool overwrite)
+char canvas_write_string(Canvas *canvas, const char *str, FontDef font,
+                         Color color, bool overwrite)
 {
   while (*str)
   {
@@ -151,7 +154,8 @@ void canvas_set_cursor(Canvas *canvas, uint8_t x, uint8_t y)
 }
 
 /* Draw line by Bresenhem's algorithm */
-void canvas_line(Canvas *canvas, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, Color color)
+void canvas_line(Canvas *canvas, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2,
+                 Color color)
 {
   int32_t deltaX = abs(x2 - x1);
   int32_t deltaY = abs(y2 - y1);
@@ -182,7 +186,8 @@ void canvas_line(Canvas *canvas, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2,
 }
 
 /* Draw polyline */
-void canvas_polyline(Canvas *canvas, Vertex *par_vertex, uint16_t par_size, Color color)
+void canvas_polyline(Canvas *canvas, Vertex *par_vertex, uint16_t par_size,
+                     Color color)
 {
   uint16_t i;
   if (par_vertex == NULL)
@@ -192,7 +197,8 @@ void canvas_polyline(Canvas *canvas, Vertex *par_vertex, uint16_t par_size, Colo
 
   for (i = 1; i < par_size; i++)
   {
-    canvas_line(canvas, par_vertex[i - 1].x, par_vertex[i - 1].y, par_vertex[i].x, par_vertex[i].y, color);
+    canvas_line(canvas, par_vertex[i - 1].x, par_vertex[i - 1].y,
+                par_vertex[i].x, par_vertex[i].y, color);
   }
 
   return;
@@ -204,7 +210,8 @@ void canvas_polyline(Canvas *canvas, Vertex *par_vertex, uint16_t par_size, Colo
  * start_angle in degree
  * sweep in degree
  */
-void canvas_draw_arc(Canvas *canvas, uint8_t x, uint8_t y, uint8_t radius, uint16_t start_angle, uint16_t sweep, Color color)
+void canvas_draw_arc(Canvas *canvas, uint8_t x, uint8_t y, uint8_t radius,
+                     uint16_t start_angle, uint16_t sweep, Color color)
 {
   float approx_degree;
   uint32_t approx_segments;
@@ -216,7 +223,8 @@ void canvas_draw_arc(Canvas *canvas, uint8_t x, uint8_t y, uint8_t radius, uint1
 
   loc_sweep = normalize_to0_360(sweep);
 
-  count = (normalize_to0_360(start_angle) * CIRCLE_APPROXIMATION_SEGMENTS) / 360;
+  count =
+    (normalize_to0_360(start_angle) * CIRCLE_APPROXIMATION_SEGMENTS) / 360;
   approx_segments = (loc_sweep * CIRCLE_APPROXIMATION_SEGMENTS) / 360;
   approx_degree = loc_sweep / (float)approx_segments;
   while (count < approx_segments)
@@ -247,7 +255,9 @@ void canvas_draw_arc(Canvas *canvas, uint8_t x, uint8_t y, uint8_t radius, uint1
  * start_angle: start angle in degree
  * sweep: finish angle in degree
  */
-void canvas_draw_arc_with_radius_line(Canvas *canvas, uint8_t x, uint8_t y, uint8_t radius, uint16_t start_angle, uint16_t sweep, Color color)
+void canvas_draw_arc_with_radius_line(Canvas *canvas, uint8_t x, uint8_t y,
+                                      uint8_t radius, uint16_t start_angle,
+                                      uint16_t sweep, Color color)
 {
   float approx_degree;
   uint32_t approx_segments;
@@ -261,7 +271,8 @@ void canvas_draw_arc_with_radius_line(Canvas *canvas, uint8_t x, uint8_t y, uint
 
   loc_sweep = normalize_to0_360(sweep);
 
-  count = (normalize_to0_360(start_angle) * CIRCLE_APPROXIMATION_SEGMENTS) / 360;
+  count =
+    (normalize_to0_360(start_angle) * CIRCLE_APPROXIMATION_SEGMENTS) / 360;
   approx_segments = (loc_sweep * CIRCLE_APPROXIMATION_SEGMENTS) / 360;
   approx_degree = loc_sweep / (float)approx_segments;
 
@@ -295,7 +306,8 @@ void canvas_draw_arc_with_radius_line(Canvas *canvas, uint8_t x, uint8_t y, uint
 #endif
 
 /* Draw circle by Bresenhem's algorithm */
-void canvas_draw_circle(Canvas *canvas, uint8_t par_x, uint8_t par_y, uint8_t par_r, Color par_color)
+void canvas_draw_circle(Canvas *canvas, uint8_t par_x, uint8_t par_y,
+                        uint8_t par_r, Color par_color)
 {
   int32_t x = -par_r;
   int32_t y = 0;
@@ -336,7 +348,8 @@ void canvas_draw_circle(Canvas *canvas, uint8_t par_x, uint8_t par_y, uint8_t pa
 }
 
 /* Draw filled circle. Pixel positions calculated using Bresenham's algorithm */
-void canvas_fill_circle(Canvas *canvas, uint8_t par_x, uint8_t par_y, uint8_t par_r, Color par_color)
+void canvas_fill_circle(Canvas *canvas, uint8_t par_x, uint8_t par_y,
+                        uint8_t par_r, Color par_color)
 {
   int32_t x = -par_r;
   int32_t y = 0;
@@ -380,7 +393,8 @@ void canvas_fill_circle(Canvas *canvas, uint8_t par_x, uint8_t par_y, uint8_t pa
 }
 
 /* Draw a rectangle */
-void canvas_draw_rectangle(Canvas *canvas, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, Color color)
+void canvas_draw_rectangle(Canvas *canvas, uint8_t x1, uint8_t y1, uint8_t x2,
+                           uint8_t y2, Color color)
 {
   canvas_line(canvas, x1, y1, x2, y1, color);
   canvas_line(canvas, x2, y1, x2, y2, color);
@@ -391,7 +405,8 @@ void canvas_draw_rectangle(Canvas *canvas, uint8_t x1, uint8_t y1, uint8_t x2, u
 }
 
 /* Draw a filled rectangle */
-void canvas_fill_rectangle(Canvas *canvas, uint8_t x1, uint8_t y1, uint8_t x2, uint8_t y2, Color color)
+void canvas_fill_rectangle(Canvas *canvas, uint8_t x1, uint8_t y1, uint8_t x2,
+                           uint8_t y2, Color color)
 {
   uint8_t x_start = ((x1 <= x2) ? x1 : x2);
   uint8_t x_end = ((x1 <= x2) ? x2 : x1);
@@ -409,7 +424,9 @@ void canvas_fill_rectangle(Canvas *canvas, uint8_t x1, uint8_t y1, uint8_t x2, u
 }
 
 /* Draw a bitmap */
-void canvas_draw_bitmap(Canvas *canvas, uint8_t x, uint8_t y, const uint8_t *bitmap, uint8_t w, uint8_t h, Color color)
+void canvas_draw_bitmap(Canvas *canvas, uint8_t x, uint8_t y,
+                        const uint8_t *bitmap, uint8_t w, uint8_t h,
+                        Color color)
 {
   int16_t byte_width = (w + 7) / 8; // Bitmap scanline pad = whole byte
   uint8_t byte = 0;
@@ -443,10 +460,7 @@ void canvas_draw_bitmap(Canvas *canvas, uint8_t x, uint8_t y, const uint8_t *bit
 
 #ifdef ENABLE_CANVAS_DRAW_ARC
 /* Convert Degrees to Radians */
-static float deg_to_rad(float par_deg)
-{
-  return par_deg * 3.14 / 180.0;
-}
+static float deg_to_rad(float par_deg) { return par_deg * 3.14 / 180.0; }
 
 /* Normalize degree to [0;360] */
 static uint16_t normalize_to0_360(uint16_t par_deg)

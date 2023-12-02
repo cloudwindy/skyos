@@ -1,11 +1,11 @@
 #include "tasks.h"
 
-#include "os.h"
-#include "mem.h"
 #include "led.h"
+#include "mem.h"
+#include "os.h"
+#include "printf.h"
 #include "remote.h"
 #include "serial.h"
-#include "printf.h"
 
 #include <stdbool.h>
 #include <string.h>
@@ -23,12 +23,15 @@ void task_remote(void *args __attribute__((unused)))
   size_t recvlen = 0;
 
   while (true)
-  { /* Main loop, check for incoming data. */
+  {
+    /* Main loop, check for incoming data. */
     recvlen = serial_recvlen();
     if (recvlen > 0)
-    { /* Check if our buffer is sufficient for the incoming data. */
+    {
+      /* Check if our buffer is sufficient for the incoming data. */
       if (recvbuf_size < recvcur + recvlen)
-      { /* Re-allocate the old buffer with more memory. */
+      {
+        /* Re-allocate the old buffer with more memory. */
         char *recvbuf_old = recvbuf;
         /* TODO: we should implement realloc(). */
         recvbuf = memalloc(recvbuf_size * 2);
@@ -55,7 +58,8 @@ void task_remote(void *args __attribute__((unused)))
 
       /* Search for data blocks as long as it's not ended. */
       while (end_p != NULL)
-      { /* Data end. */
+      {
+        /* Data end. */
         size_t block_size = end_p - start_p + 1;
         /* Remove crlf and again terminate the string. */
         strip_crlf(start_p, &block_size);
@@ -66,15 +70,18 @@ void task_remote(void *args __attribute__((unused)))
         size_t resp_len = strlen(resp);
 
         if (ret < 0)
-        { /* Failed. */
+        {
+          /* Failed. */
           printf("remote_exec: %d\n", ret);
         }
 
         if (resp_len > 0)
-        { /* We have something to reply. */
+        {
+          /* We have something to reply. */
           ret = serial_send(resp, resp_len);
           if (ret < 0)
-          { /* ...but we couldn't. */
+          {
+            /* ...but we couldn't. */
             printf("serial_send: %d\n", ret);
           }
         }
@@ -83,7 +90,8 @@ void task_remote(void *args __attribute__((unused)))
         /* Move to the start of next data block. */
         start_p = end_p + 1;
         if (start_p[0] != '\0')
-        { /* Find the end of next data block, if there is. */
+        {
+          /* Find the end of next data block, if there is. */
           end_p = strchr(start_p, REMOTE_DATA_DELIMITER);
         }
         else
@@ -92,10 +100,12 @@ void task_remote(void *args __attribute__((unused)))
         }
       }
       if (start_p != recvbuf)
-      { /* We just had at least one block. */
+      {
+        /* We just had at least one block. */
         led_blink();
         if (start_p[0] != '\0')
-        { /* ...but the last block didn't end properly. */
+        {
+          /* ...but the last block didn't end properly. */
           size_t block_size = strlen(start_p);
           /* Move it to the start of buffer. */
           memmove(recvbuf, start_p, block_size);

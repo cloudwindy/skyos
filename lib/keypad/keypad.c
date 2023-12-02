@@ -1,9 +1,9 @@
 #include "keypad.h"
 #include "delay.h"
 
-#define BITMASK_SWITCH(x)                    \
-  for (uint64_t bit = 1; x >= bit; bit *= 2) \
-    if (x & bit)                             \
+#define BITMASK_SWITCH(x)                                                      \
+  for (uint64_t bit = 1; x >= bit; bit *= 2)                                   \
+    if (x & bit)                                                               \
       switch (bit)
 
 static uint8_t keypad_get_col(void);
@@ -15,42 +15,42 @@ char keypad_getchar(void)
   Key keys = keypad_scan();
   BITMASK_SWITCH(keys)
   {
-  case 0:
-    return '\0';
-  case BIT15:
-    return '1';
-  case BIT14:
-    return '2';
-  case BIT13:
-    return '3';
-  case BIT12:
-    return 'a';
-  case BIT11:
-    return '4';
-  case BIT10:
-    return '5';
-  case BIT9:
-    return '6';
-  case BIT8:
-    return 'b';
-  case BIT7:
-    return '7';
-  case BIT6:
-    return '8';
-  case BIT5:
-    return '9';
-  case BIT4:
-    return 'c';
-  case BIT3:
-    return '*';
-  case BIT2:
-    return '0';
-  case BIT1:
-    return '#';
-  case BIT0:
-    return 'd';
-  default:
-    return '\0';
+    case 0:
+      return '\0';
+    case BIT15:
+      return '1';
+    case BIT14:
+      return '2';
+    case BIT13:
+      return '3';
+    case BIT12:
+      return 'a';
+    case BIT11:
+      return '4';
+    case BIT10:
+      return '5';
+    case BIT9:
+      return '6';
+    case BIT8:
+      return 'b';
+    case BIT7:
+      return '7';
+    case BIT6:
+      return '8';
+    case BIT5:
+      return '9';
+    case BIT4:
+      return 'c';
+    case BIT3:
+      return '*';
+    case BIT2:
+      return '0';
+    case BIT1:
+      return '#';
+    case BIT0:
+      return 'd';
+    default:
+      return '\0';
   }
   return '\0';
 }
@@ -90,18 +90,18 @@ static void keypad_set_col(uint8_t col)
 {
   switch (col)
   {
-  case 0:
-    gpio_set(GPIOA, GPIO3);
-    break;
-  case 1:
-    gpio_set(GPIOA, GPIO2);
-    break;
-  case 2:
-    gpio_set(GPIOA, GPIO1);
-    break;
-  case 3:
-    gpio_set(GPIOA, GPIO0);
-    break;
+    case 0:
+      gpio_set(GPIOA, GPIO3);
+      break;
+    case 1:
+      gpio_set(GPIOA, GPIO2);
+      break;
+    case 2:
+      gpio_set(GPIOA, GPIO1);
+      break;
+    case 3:
+      gpio_set(GPIOA, GPIO0);
+      break;
   }
 }
 

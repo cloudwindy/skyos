@@ -65,12 +65,6 @@ static void write(uint8_t *data, size_t size)
   }
 }
 
-static void select(void)
-{
-  gpio_clear(W25Q_BANK_CS, W25Q_CS);
-}
+static void select(void) { gpio_clear(W25Q_BANK_CS, W25Q_CS); }
 
-static void deselect(void)
-{
-  gpio_set(W25Q_BANK_CS, W25Q_CS);
-}
+static void deselect(void) { gpio_set(W25Q_BANK_CS, W25Q_CS); }

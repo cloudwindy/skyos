@@ -1,7 +1,7 @@
-#include "setup.h"
 #include "os.h"
-#include "tasks.h"
 #include "printf.h"
+#include "setup.h"
+#include "tasks.h"
 
 int main(void)
 {
@@ -10,7 +10,7 @@ int main(void)
   /**
    * This task won't not run immediately because RTOS
    * isn't started yet.
-  */
+   */
   os_exec("task", task_init, NULL, 0);
   /**
    * Start up RTOS.
@@ -23,4 +23,3 @@ int main(void)
     ;
   return 0;
 }
-

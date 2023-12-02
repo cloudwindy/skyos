@@ -44,31 +44,32 @@ void kbd_confirm(Keyboard *kbd)
 
 static char select(char key, uint8_t i)
 {
-  switch (key) {
-  case '2':
-    /* abc */
-    return 'a' + i % 3;
-  case '3':
-    /* def */
-    return 'd' + i % 3;
-  case '4':
-    /* ghi */
-    return 'g' + i % 3;
-  case '5':
-    /* jkl */
-    return 'j' + i % 3;
-  case '6':
-    /* mno */
-    return 'm' + i % 3;
-  case '7':
-    /* pqrs */
-    return 'p' + i % 4;
-  case '8':
-    /* tuv */
-    return 't' + i % 3;
-  case '9':
-    /* wxyz */
-    return 'w' + i % 4;
+  switch (key)
+  {
+    case '2':
+      /* abc */
+      return 'a' + i % 3;
+    case '3':
+      /* def */
+      return 'd' + i % 3;
+    case '4':
+      /* ghi */
+      return 'g' + i % 3;
+    case '5':
+      /* jkl */
+      return 'j' + i % 3;
+    case '6':
+      /* mno */
+      return 'm' + i % 3;
+    case '7':
+      /* pqrs */
+      return 'p' + i % 4;
+    case '8':
+      /* tuv */
+      return 't' + i % 3;
+    case '9':
+      /* wxyz */
+      return 'w' + i % 4;
   }
   return '\0';
 }
