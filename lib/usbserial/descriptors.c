@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include <libopencm3/usb/cdc.h>
 #include <libopencm3/usb/usbd.h>
 

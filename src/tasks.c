@@ -3,6 +3,7 @@
 #include "os.h"
 #include "printf.h"
 #include "state.h"
+#include "w25q.h"
 
 #include <libopencm3/stm32/iwdg.h>
 
@@ -15,6 +16,10 @@ void task_init(void *args __attribute__((unused)))
   {
     state_restore_to_defaults();
   }
+
+  w25q_reset();
+  printf("id=%04X\n", w25q_read_id());
+  printf("jedec_id=%08X\n", w25q_read_jedec_id());
 
   os_exec("ui", task_ui, NULL, 0);
   os_exec("keypad", task_keypad, NULL, 0);

@@ -4,6 +4,7 @@
 #include "ssd1306.h"
 #include "ssd1306_conf.h"
 #include "tty.h"
+#include "w25q.h"
 
 #include <libopencm3/cm3/nvic.h>
 #include <libopencm3/stm32/gpio.h>
@@ -122,8 +123,9 @@ static void setup_gpio(void)
                 LED);
 
   gpio_set_mode(GPIO_BANK_SPI1_SCK, GPIO_MODE_OUTPUT_50_MHZ,
-                GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,
-                GPIO_SPI1_SCK | GPIO_SPI1_MOSI | GPIO_SPI1_MISO);
+                GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO_SPI1_SCK | GPIO_SPI1_MOSI);
+  gpio_set_mode(GPIO_BANK_SPI1_SCK, GPIO_MODE_INPUT, GPIO_CNF_INPUT_PULL_UPDOWN,
+                GPIO_SPI1_MISO);
 
   gpio_set_mode(GPIO_BANK_I2C1_SCL, GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_ALTFN_OPENDRAIN, GPIO_I2C1_SCL | GPIO_I2C1_SDA);
@@ -134,6 +136,9 @@ static void setup_gpio(void)
                 GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_DC);
   gpio_set_mode(SSD1306_BANK_CS, GPIO_MODE_OUTPUT_2_MHZ,
                 GPIO_CNF_OUTPUT_PUSHPULL, SSD1306_CS);
+
+  gpio_set_mode(W25Q_BANK_CS, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL,
+                W25Q_CS);
 
   gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL,
                 GPIO0 | GPIO1 | GPIO2 | GPIO3);
