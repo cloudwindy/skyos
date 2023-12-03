@@ -1,22 +1,25 @@
 #include "keypad.h"
 #include "delay.h"
+#include "keypad_conf.h"
 
 #define BITMASK_SWITCH(x)                                                      \
   for (uint64_t bit = 1; x >= bit; bit *= 2)                                   \
     if (x & bit)                                                               \
       switch (bit)
 
-static uint8_t keypad_get_col(void);
-static void keypad_set_col(uint8_t col);
+static uint8_t keypad_get_rows(void);
+static void keypad_set_col(uint8_t col, bool set);
 static void keypad_clear_cols(void);
 
 char keypad_getchar(void)
 {
   Key keys = keypad_scan();
+  if (keys == 0)
+  {
+    return '\0';
+  }
   BITMASK_SWITCH(keys)
   {
-    case 0:
-      return '\0';
     case BIT15:
       return '1';
     case BIT14:
@@ -49,8 +52,6 @@ char keypad_getchar(void)
       return '#';
     case BIT0:
       return 'd';
-    default:
-      return '\0';
   }
   return '\0';
 }
@@ -63,49 +64,57 @@ Key keypad_scan(void)
   uint16_t keys = 0;
   uint8_t i = 4;
   while (i--)
-  { /* Scan from 1 to 4 */
-    keypad_clear_cols();
-    keypad_set_col(i);
+  {
+    /* Scan from 1 to 4 */
+    keypad_set_col(i, true);
     usleep(1);
-    keys |= keypad_get_col() << i * 4;
+    keys |= keypad_get_rows() << i * 4;
+    keypad_set_col(i, false);
   }
   keypad_clear_cols();
   return keys;
 }
 
-/**
- * 4 bits of current row.
- */
-static uint8_t keypad_get_col(void)
+static uint8_t keypad_get_rows(void)
 {
+  uint16_t gpios = gpio_port_read(KEYPAD_BANK_ROW);
   uint8_t row = 0;
-  row |= (gpio_get(GPIOB, GPIO6) > 0) << 0;
-  row |= (gpio_get(GPIOB, GPIO7) > 0) << 1;
-  row |= (gpio_get(GPIOB, GPIO8) > 0) << 2;
-  row |= (gpio_get(GPIOB, GPIO9) > 0) << 3;
+  row |= !!(gpios & KEYPAD_ROW4) << 0;
+  row |= !!(gpios & KEYPAD_ROW3) << 1;
+  row |= !!(gpios & KEYPAD_ROW2) << 2;
+  row |= !!(gpios & KEYPAD_ROW1) << 3;
   return row;
 }
 
-static void keypad_set_col(uint8_t col)
+static void keypad_set_col(uint8_t col, bool set)
 {
+  uint16_t gpios = 0;
   switch (col)
   {
     case 0:
-      gpio_set(GPIOA, GPIO3);
+      gpios = KEYPAD_COL4;
       break;
     case 1:
-      gpio_set(GPIOA, GPIO2);
+      gpios = KEYPAD_COL3;
       break;
     case 2:
-      gpio_set(GPIOA, GPIO1);
+      gpios = KEYPAD_COL2;
       break;
     case 3:
-      gpio_set(GPIOA, GPIO0);
+      gpios = KEYPAD_COL1;
       break;
+  }
+  if (set)
+  {
+    gpio_set(KEYPAD_BANK_COL, gpios);
+  }
+  else
+  {
+    gpio_clear(KEYPAD_BANK_COL, gpios);
   }
 }
 
 static void keypad_clear_cols(void)
 {
-  gpio_clear(GPIOA, GPIO0 | GPIO1 | GPIO2 | GPIO3);
+  gpio_clear(KEYPAD_BANK_COL, KEYPAD_COL_ALL);
 }

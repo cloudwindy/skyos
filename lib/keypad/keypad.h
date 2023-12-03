@@ -1,7 +1,7 @@
 #ifndef KEYPAD_H
 #define KEYPAD_H
 
-#include <libopencm3/stm32/gpio.h>
+#include <stdint.h>
 
 typedef uint16_t Key;
 

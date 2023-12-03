@@ -12,7 +12,7 @@ void test_tx(void)
     .gpios = GPIO1,
     .low_freq = 1200,
     .high_freq = 2200,
-    .default_cycle = .5,
+    .default_cycle = 128,
   };
   pwm_init(&gen);
 

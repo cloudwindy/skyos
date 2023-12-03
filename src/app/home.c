@@ -82,7 +82,7 @@ static void update_ui(UI *ui)
       strcpy(freq_str, " VFO ");
       if (!editing)
       {
-        snprintf(&freq_str[5], FREQ_STR_SIZE - 5, "%3d.%06d",
+        snprintf(&freq_str[5], FREQ_STR_SIZE - 5, "%3lu.%06lu",
                  g_st.vfo_freq / 1000000, g_st.vfo_freq % 1000000);
       }
       else
